@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>UPN EduTech — Panel Administrativo</title>
+
+  <!-- UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    :root{
+      --upn-blue:#1f57ff;
+      --upn-blue-700:#1745d0;
+      --text:#0f172a;
+      --border:#e5e7eb;
+      --bg:#f6f7fb;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family:"Manrope",system-ui,-apple-system,Segoe UI,Roboto;
+      color:var(--text);
+      background:var(--bg);
+      min-height:100vh;
+      display:flex;flex-direction:column;
+    }
+    .layout{display:flex;min-height:100vh}
+    .glass{background:#fff;border:1px solid var(--border);box-shadow:0 6px 18px rgba(15,23,42,.04)}
+    /* Sidebar expand/collapse */
+    #sidebar{
+      width:84px;background:#fff;border-right:1px solid var(--border);
+      display:flex;flex-direction:column;align-items:center;padding:12px 10px;
+      transition:width .25s ease;position:sticky;top:0;height:100vh;
+    }
+    #sidebar .label{opacity:0;transform:translateX(-6px);transition:.2s}
+    .sidebar-open #sidebar{width:240px;align-items:stretch}
+    .sidebar-open #sidebar .label{opacity:1;transform:none}
+    #main{flex:1;padding:18px;min-width:0}
+
+    /* Buttons */
+    .btn-upn{background:var(--upn-blue);color:#fff;border-radius:12px;padding:.56rem 1rem;font-weight:700}
+    .btn-upn:hover{background:var(--upn-blue-700)}
+    .btn-white{background:#fff;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:.56rem 1rem;font-weight:700}
+    .btn-white:hover{background:#f1f5f9}
+    .btn-outline-blue{border:1.5px solid var(--upn-blue);color:var(--upn-blue);padding:.3rem .6rem;border-radius:10px;font-weight:700}
+    .btn-outline-blue:hover{background:#eef4ff}
+
+    .badge{padding:.22rem .6rem;border-radius:999px;font-size:.72rem;font-weight:700;display:inline-block}
+
+    /* SweetAlert2 styling */
+    .swal2-popup{border-radius:16px!important}
+    .swal2-title{font-weight:800!important;color:var(--text)!important}
+    .swal2-confirm{background:var(--upn-blue)!important;border-radius:10px!important;font-weight:800!important}
+    .swal2-cancel{background:#475569!important;border-radius:10px!important;font-weight:800!important}
+
+    /* Toast container */
+    #toast-area{position:fixed;bottom:16px;right:16px;display:flex;flex-direction:column;gap:10px;z-index:70}
+  </style>
+</head>
+<body>
+
+  <div id="layout" class="layout">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="glass transition-all duration-300 ease-in-out border-r border-gray-200">
+      <!-- Logo -->
+      <div class="flex items-center justify-center py-4 border-b border-gray-100 transition-all duration-300">
+        <!-- Logo expandido (horizontal) -->
+        <img id="logo-expanded"
+             src="https://www.upn.edu.co/wp-content/uploads/2025/08/Identidad-UPN-25-horizontal-azul-fondo-transparente.png"
+             alt="UPN" class="h-12 w-auto object-contain transition-all duration-300 hidden"/>
+        <!-- Logo colapsado (vertical) -->
+        <img id="logo-collapsed"
+             src="https://www.upn.edu.co/wp-content/uploads/2025/08/Identidad-UPN-25-vertical-azul-fondo-blanco.png"
+             alt="UPN" class="h-16 w-auto object-contain transition-all duration-300"/>
+      </div>
+
+      <nav class="w-full space-y-1 mt-3">
+        <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-[#eef4ff] hover:text-[var(--upn-blue)] bg-[#eef4ff] text-[var(--upn-blue)] transition-all duration-200">
+          <span class="material-symbols-outlined text-xl">dashboard</span>
+          <span class="label font-semibold text-sm">Panel</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-[#eef4ff] hover:text-[var(--upn-blue)] transition-all duration-200">
+          <span class="material-symbols-outlined text-xl">inventory_2</span>
+          <span class="label font-semibold text-sm">Productos</span>
+        </a>
+        <button id="quickAdd" class="w-full text-left flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-[#eef4ff] hover:text-[var(--upn-blue)] transition-all duration-200">
+          <span class="material-symbols-outlined text-xl">add_box</span>
+          <span class="label font-semibold text-sm">Nuevo producto</span>
+        </button>
+        <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-[#eef4ff] hover:text-[var(--upn-blue)] transition-all duration-200">
+          <span class="material-symbols-outlined text-xl">settings</span>
+          <span class="label font-semibold text-sm">Ajustes</span>
+        </a>
+      </nav>
+
+      <div class="mt-auto w-full px-3 pb-4 pt-6 border-t border-gray-100">
+        <div class="text-[11px] text-gray-500 mb-1 font-medium">Espacio</div>
+        <div class="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
+          <div class="h-full bg-[var(--upn-blue)] rounded-full" style="width:40%"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main id="main" class="w-full">
+      <!-- Topbar del panel -->
+      <section class="glass rounded-2xl px-4 py-3 mb-4 flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-2 border rounded-xl px-3 py-2">
+          <span class="material-symbols-outlined text-gray-500">search</span>
+          <input id="searchInput" placeholder="Buscar producto…" class="bg-transparent outline-none text-sm w-56"/>
+        </div>
+
+        <button id="exportBtn" class="btn-white hidden md:inline-flex items-center gap-2">
+          <span class="material-symbols-outlined">ios_share</span> Exportar
+        </button>
+
+        <button id="addBtn" class="btn-upn inline-flex items-center gap-2">
+          <span class="material-symbols-outlined">add</span>
+          <span class="hidden sm:inline">Nuevo producto</span>
+        </button>
+
+        <div class="ml-auto relative">
+          <button id="adminUserBtn" class="rounded-full border p-0.5">
+            <img class="h-9 w-9 rounded-full object-cover" src="https://i.pravatar.cc/100?img=5" alt="user"/>
+          </button>
+          <div id="adminUserMenu" class="absolute right-0 mt-2 w-56 glass rounded-xl p-2 hidden">
+            <div class="px-3 py-2 text-sm">
+              <div class="font-semibold" id="userName">Administrador</div>
+              <div class="text-gray-600" id="userEmail">admin@upn.edu.co</div>
+            </div>
+            <hr class="border-gray-200">
+            <a href="#" id="logoutBtn" class="block px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">Cerrar sesión</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Métricas -->
+      <section class="grid md:grid-cols-4 gap-4">
+        <div class="glass rounded-2xl p-4 text-center"><div class="text-sm text-gray-500">Nuevos</div><div class="mt-2 text-3xl font-extrabold" id="statNew">12</div></div>
+        <div class="glass rounded-2xl p-4 text-center"><div class="text-sm text-gray-500">En proceso</div><div class="mt-2 text-3xl font-extrabold" id="statProc">20</div></div>
+        <div class="glass rounded-2xl p-4 text-center"><div class="text-sm text-gray-500">En revisión</div><div class="mt-2 text-3xl font-extrabold" id="statReview">57</div></div>
+        <div class="glass rounded-2xl p-4 text-center"><div class="text-sm text-gray-500">Publicados</div><div class="mt-2 text-3xl font-extrabold" id="statPub">98</div></div>
+      </section>
+
+      <!-- Filtros -->
+      <section class="glass rounded-2xl mt-4 px-4 py-3 flex flex-wrap items-center gap-2">
+        <span class="text-sm text-gray-700">Filtros:</span>
+        <select id="catFilter" class="bg-white border rounded-lg px-2 py-1 text-sm">
+          <option value="all">Todas</option>
+          <option value="ia">IA</option>
+          <option value="apps">Apps</option>
+          <option value="vr">VR</option>
+          <option value="gamificacion">Gamificación</option>
+        </select>
+        <div class="ml-auto flex gap-2">
+          <button id="sortBtn" class="btn-white text-sm">Ordenar</button>
+          <button id="resetBtn" class="btn-white text-sm">Limpiar</button>
+        </div>
+      </section>
+
+      <!-- Tabla -->
+      <section class="glass rounded-2xl mt-4 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wide">
+              <tr class="text-left">
+                <th class="py-3 pl-4 pr-2">#</th>
+                <th class="py-3 px-2">Producto</th>
+                <th class="py-3 px-2">Categoría</th>
+                <th class="py-3 px-2">Precio</th>
+                <th class="py-3 px-2">Estado</th>
+                <th class="py-3 px-2 text-right pr-4">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="rows" class="text-sm"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL CRUD -->
+  <div id="modal" class="fixed inset-0 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="relative glass rounded-2xl w-full max-w-lg p-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="modalTitle" class="text-xl font-extrabold">Nuevo producto</h3>
+        <button id="closeModal" class="rounded-lg p-2 hover:bg-gray-100">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form id="form" class="grid gap-3">
+        <input id="idx" type="hidden"/>
+        <label class="grid gap-1">
+          <span class="text-sm">Título</span>
+          <input id="title" class="rounded-lg px-3 py-2 border outline-none" required>
+        </label>
+        <div class="grid gap-3 md:grid-cols-2">
+          <label class="grid gap-1">
+            <span class="text-sm">Precio (Tokens)</span>
+            <input id="price" type="number" min="0" class="rounded-lg px-3 py-2 border outline-none" required/>
+          </label>
+          <label class="grid gap-1">
+            <span class="text-sm">Categoría</span>
+            <select id="category" class="rounded-lg px-3 py-2 border outline-none">
+              <option value="ia">IA</option>
+              <option value="apps">Apps</option>
+              <option value="vr">VR</option>
+              <option value="gamificacion">Gamificación</option>
+            </select>
+          </label>
+        </div>
+        <label class="grid gap-1">
+          <span class="text-sm">Imagen (URL)</span>
+          <input id="img" class="rounded-lg px-3 py-2 border outline-none" placeholder="https://..."/>
+        </label>
+        <label class="grid gap-1">
+          <span class="text-sm">Descripción</span>
+          <textarea id="desc" rows="3" class="rounded-lg px-3 py-2 border outline-none"></textarea>
+        </label>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancel" class="btn-white">Cancelar</button>
+          <button type="submit" class="btn-upn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast area -->
+  <div id="toast-area"></div>
+
+<script>
+/* ===== Sidebar hover expand + logos ===== */
+const layout = document.getElementById("layout");
+const sidebar = document.getElementById("sidebar");
+const logoExpanded = document.getElementById("logo-expanded");
+const logoCollapsed = document.getElementById("logo-collapsed");
+
+sidebar.addEventListener("mouseenter", () => {
+  layout.classList.add("sidebar-open");
+  logoExpanded.classList.remove("hidden");
+  logoCollapsed.classList.add("hidden");
+});
+sidebar.addEventListener("mouseleave", () => {
+  layout.classList.remove("sidebar-open");
+  logoExpanded.classList.add("hidden");
+  logoCollapsed.classList.remove("hidden");
+});
+
+/* ===== Sesión y menú usuario ===== */
+function logout() {
+  Swal.fire({
+    title: "¿Cerrar sesión?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, salir",
+    confirmButtonColor: "#2563eb",
+  }).then((res) => {
+    if (res.isConfirmed) {
+      localStorage.removeItem("user");
+      location.reload();
+    }
+  });
+}
+document.getElementById("adminUserBtn").onclick = () =>
+  document.getElementById("adminUserMenu").classList.toggle("hidden");
+document.getElementById("logoutBtn").onclick = logout;
+
+/* ===== Datos base ===== */
+const LS_KEY = "admin_products";
+let products = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+const sample = [
+  {
+    title: "IA Tutoring",
+    price: 150,
+    category: "ia",
+    status: "publicado",
+    desc: "Sistema inteligente con análisis.",
+    section: "Soluciones Destacadas",
+  },
+  {
+    title: "Kit Gamificación",
+    price: 120,
+    category: "gamificacion",
+    status: "borrador",
+    desc: "Puntos, badges y retos.",
+  },
+];
+if (products.length === 0) products = sample;
+persist();
+function persist() {
+  localStorage.setItem(LS_KEY, JSON.stringify(products));
+}
+
+/* ===== Utilidades ===== */
+const rows = document.getElementById("rows");
+const modal = document.getElementById("modal");
+const $ = (id) => document.getElementById(id);
+const fmt = (n) => `${Number(n).toLocaleString("es-CO")} Tokens`;
+
+function badge(status) {
+  const map = {
+    publicado: "bg-green-100 text-green-700",
+    borrador: "bg-gray-200 text-gray-700",
+    revisión: "bg-amber-100 text-amber-700",
+  };
+  return `<span class="badge ${map[status] || "bg-gray-200 text-gray-700"}">${status}</span>`;
+}
+
+/* ===== Render tabla ===== */
+function render(list = products) {
+  const term = $("searchInput").value.trim().toLowerCase();
+  const cat = $("catFilter").value;
+  const data = list.filter(
+    (p) =>
+      (cat === "all" || p.category === cat) &&
+      (!term || p.title.toLowerCase().includes(term))
+  );
+
+  rows.innerHTML = "";
+  data.forEach((p, idx) => {
+    rows.insertAdjacentHTML(
+      "beforeend",
+      `
+      <tr class="border-t">
+        <td class="py-3 pl-4">${idx + 1}</td>
+        <td class="py-3 px-2">
+          <div class="flex items-center gap-3">
+            <img src="${p.img || "https://via.placeholder.com/64?text=%F0%9F%93%9C"}" class="h-10 w-10 rounded-lg object-cover">
+            <div>
+              <div class="font-semibold">${p.title}</div>
+              <div class="text-xs text-gray-500">${p.desc || ""}</div>
+              ${
+                p.section
+                  ? `<div class="text-[11px] text-blue-600 mt-0.5">Sección: ${p.section}</div>`
+                  : ""
+              }
+            </div>
+          </div>
+        </td>
+        <td class="capitalize">${p.category}</td>
+        <td class="font-bold">${fmt(p.price)}</td>
+        <td>${badge(p.status)}</td>
+        <td class="text-right pr-4">
+          <div class="flex justify-end gap-2">
+            <button onclick="edit(${idx})" class="text-gray-700 hover:text-blue-600"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+            <button onclick="publish(${idx})" class="btn-outline-blue">Publicar</button>
+            <button onclick="del(${idx})" class="text-red-600 hover:text-red-700"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+          </div>
+        </td>
+      </tr>`
+    );
+  });
+}
+
+/* ===== Modal CRUD ===== */
+function openModal(title = "Nuevo producto") {
+  $("modalTitle").textContent = title;
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+function closeModal() {
+  modal.classList.add("hidden");
+  $("form").reset();
+  $("idx").value = "";
+}
+window.edit = (i) => {
+  const p = products[i];
+  $("idx").value = i;
+  $("title").value = p.title;
+  $("price").value = p.price;
+  $("category").value = p.category;
+  $("img").value = p.img || "";
+  $("desc").value = p.desc || "";
+  openModal("Editar producto");
+};
+window.del = (i) => {
+  Swal.fire({
+    icon: "warning",
+    title: "Eliminar producto",
+    text: "Esta acción no se puede deshacer.",
+    showCancelButton: true,
+    confirmButtonText: "Eliminar",
+    confirmButtonColor: "#ef4444",
+  }).then((res) => {
+    if (res.isConfirmed) {
+      const deleted = products[i];
+      products.splice(i, 1);
+      persist();
+
+      // eliminar también del index
+      let publicList = JSON.parse(localStorage.getItem("public_products") || "[]");
+      publicList = publicList.filter((p) => p.title !== deleted.title);
+      localStorage.setItem("public_products", JSON.stringify(publicList));
+
+      render();
+      Swal.fire({ icon: "success", title: "Eliminado", timer: 1200, showConfirmButton: false });
+    }
+  });
+};
+
+/* ===== Guardar ===== */
+$("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const obj = {
+    title: $("title").value.trim(),
+    price: Number($("price").value || 0),
+    category: $("category").value,
+    img: $("img").value.trim(),
+    desc: $("desc").value.trim(),
+    status: "borrador",
+  };
+  const i = $("idx").value;
+  if (i === "") products.unshift(obj);
+  else {
+    const old = products[Number(i)];
+    products[Number(i)] = { ...old, ...obj };
+
+    // Actualizar también si está publicado
+    let publicList = JSON.parse(localStorage.getItem("public_products") || "[]");
+    const idx = publicList.findIndex((x) => x.title === old.title);
+    if (idx >= 0) publicList[idx] = { ...publicList[idx], ...obj };
+    localStorage.setItem("public_products", JSON.stringify(publicList));
+  }
+  persist();
+  render();
+  closeModal();
+  Swal.fire({ icon: "success", title: "Guardado", timer: 1000, showConfirmButton: false });
+});
+
+/* ===== Publicar ===== */
+/* ===== Publicar o actualizar producto público ===== */
+function upsertPublicProduct(prod) {
+  let list = JSON.parse(localStorage.getItem("public_products") || "[]");
+  const idx = list.findIndex((x) => x.title === prod.title);
+  if (idx >= 0) list[idx] = prod;
+  else list.push(prod);
+  localStorage.setItem("public_products", JSON.stringify(list));
+
+  // 🔁 Si la página principal ya está abierta en otra pestaña, forzar que el nuevo producto tenga navegación
+  try {
+    // En caso de que haya un grid visible en la misma sesión (por ejemplo modo preview)
+    const allCards = document.querySelectorAll("[data-product], [data-month-product]");
+    allCards.forEach((card) => {
+      const title = card.dataset.title || card.querySelector("h3")?.textContent?.trim();
+      if (title === prod.title) {
+        const img = card.querySelector("img");
+        if (img && !img.dataset.bound) {
+          img.dataset.bound = "true";
+          img.addEventListener("click", () => {
+            const productData = {
+              title: prod.title,
+              price: prod.price,
+              category: prod.category,
+              description: prod.desc || prod.short_desc || "Herramienta educativa digital.",
+              img: prod.img || "",
+            };
+            localStorage.setItem("selectedProduct", JSON.stringify(productData));
+            document.body.style.transition = "opacity 0.5s ease";
+            document.body.style.opacity = "0";
+            setTimeout(() => (window.location.href = "producto.html"), 400);
+          });
+        }
+      }
+    });
+  } catch (e) {
+    console.warn("⚠️ No se pudo enlazar navegación dinámica (modo admin).");
+  }
+}
+
+
+/* ===== Publicar ===== */
+window.publish = async (i) => {
+  const p = products[i];
+
+  const { value: formValues } = await Swal.fire({
+    title: `Publicar “${p.title}”`,
+    html: `
+      <div class="text-left">
+        <label class="block text-sm mb-1 font-semibold">Sección destino</label>
+        <select id="sw-section" class="swal2-input">
+          <option value="destacadas">Soluciones Destacadas</option>
+          <option value="mes">Innovaciones del Mes</option>
+          <option value="recomendadas">Colección Recomendada</option>
+        </select>
+
+        <label class="block text-sm mt-3 mb-1 font-semibold">Descripción corta</label>
+        <textarea id="sw-short" class="swal2-textarea" placeholder="Texto breve"></textarea>
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: "Publicar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#2563eb",
+    preConfirm: () => {
+      const section = document.getElementById("sw-section").value;
+      return {
+        section,
+        short: document.getElementById("sw-short").value.trim(),
+      };
+    },
+  });
+
+  if (formValues) {
+    // 🔧 Traduce el valor simple a la etiqueta que entiende el index
+    const sectionMap = {
+      destacadas: "Soluciones Destacadas",
+      mes: "Innovaciones del Mes",
+      recomendadas: "Colección Recomendada",
+    };
+    const readableSection = sectionMap[formValues.section] || formValues.section;
+
+    // 🧩 Actualiza el producto en memoria
+    products[i].status = "publicado";
+    products[i].section = readableSection;
+    if (formValues.short) products[i].short_desc = formValues.short;
+
+    persist();
+    render();
+
+    // 🧠 Inserta o actualiza en la lista de productos públicos
+    upsertPublicProduct({ ...products[i] });
+
+    // 🪄 Confirmación visual + debug opcional
+    console.log("✅ Producto publicado:", products[i]);
+    console.log("🗂️ Lista public_products:", JSON.parse(localStorage.getItem("public_products")));
+
+    Swal.fire({
+      icon: "success",
+      title: "Publicado correctamente",
+      text: `El producto se mostrará en la sección: ${readableSection}`,
+      confirmButtonColor: "#2563eb",
+    });
+  }
+};
+
+/* ===== Controles ===== */
+document.getElementById("quickAdd").onclick = () => openModal("Nuevo producto");
+document.getElementById("addBtn").onclick = () => openModal("Nuevo producto");
+document.getElementById("closeModal").onclick = closeModal;
+document.getElementById("cancel").onclick = closeModal;
+$("searchInput").addEventListener("input", () => render());
+$("catFilter").addEventListener("change", () => render());
+$("resetBtn")?.addEventListener("click", () => {
+  $("searchInput").value = "";
+  $("catFilter").value = "all";
+  render();
+});
+$("sortBtn")?.addEventListener("click", () => {
+  products.sort((a, b) => a.price - b.price);
+  persist();
+  render();
+});
+$("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(products, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "productos.json";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ===== Init ===== */
+render();
+</script>
+
+
+</body>
+</html>

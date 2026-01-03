@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>UPN Marketplace - Carrito</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+  body { font-family: 'Manrope', sans-serif; }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .product-img { transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .product-img:hover { transform: scale(1.08) rotate(2deg); }
+  .heart-btn:hover { transform: scale(1.2); }
+  .heart-btn.active .material-symbols-outlined { color: #ef4444; }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- 🔹 HEADER -->
+<header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+  <div class="container mx-auto flex items-center justify-between px-6 py-3">
+
+    <!-- LOGO -->
+    <a href="index_tres_copy.html" class="flex items-center space-x-2">
+      <img src="https://www.upn.edu.co/wp-content/uploads/2025/08/Identidad-UPN-25-horizontal-azul-fondo-transparente.png"
+           alt="UPN Logo" class="w-13 h-20 object-contain transition-transform duration-300 hover:scale-105">
+    </a>
+
+    <!-- BÚSQUEDA -->
+    <div class="flex-1 px-6 hidden md:flex">
+      <div class="flex w-full border border-gray-300 rounded-lg overflow-hidden">
+        <select class="bg-gray-100 px-3 text-gray-600 text-sm outline-none">
+          <option>Todas</option>
+          <option>Recursos</option>
+          <option>Programas</option>
+          <option>Cursos</option>
+          <option>Herramientas</option>
+        </select>
+        <input type="text" placeholder="Buscar herramientas..."
+               class="w-full px-4 py-2 text-sm text-gray-700 outline-none"/>
+        <button class="bg-blue-700 text-white px-6 text-sm font-semibold hover:bg-blue-600 transition">Buscar</button>
+      </div>
+    </div>
+
+    <!-- ICONOS -->
+    <div class="flex items-center gap-6 text-gray-700">
+      <!-- Carrito -->
+      <a href="cart.html" class="relative hover:text-yellow-600 transition">
+        <span class="material-symbols-outlined text-4xl">shopping_cart</span>
+        <span id="cart-count"
+              class="absolute -top-1.5 -right-2 bg-yellow-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+      </a>
+
+      <!-- Usuario -->
+      <div id="user-section" class="flex items-center">
+        <a href="login.html" id="login-link"
+           class="flex items-center hover:text-blue-700 transition">
+          <span class="material-symbols-outlined text-3xl">person</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 🔹 MAIN -->
+<main class="container mx-auto px-6 lg:px-12 py-10">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-8">
+      <span class="material-symbols-outlined text-4xl text-gray-800">shopping_bag</span>
+      <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Carrito de Compras</h1>
+      <span id="item-count" class="text-sm text-gray-500 ml-auto font-medium">0 productos</span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-5" id="cart-items"></div>
+
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-7 sticky top-24">
+          <h2 class="text-xl font-bold mb-6 text-gray-900">Resumen</h2>
+
+          <div class="space-y-4 mb-6">
+            <div class="flex justify-between text-gray-600">
+              <span class="font-medium">Subtotal</span>
+              <span id="subtotal" class="font-semibold">0 Tokens</span>
+            </div>
+            <div class="flex justify-between text-gray-600">
+              <span class="font-medium">Envío</span>
+              <span class="text-green-600 font-semibold">Gratis</span>
+            </div>
+            <div class="border-t border-gray-200 pt-4 flex justify-between font-bold text-xl text-gray-900">
+              <span>Total</span>
+              <span id="total">0 Tokens</span>
+            </div>
+          </div>
+
+          <button onclick="checkout()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-xl shadow-lg mb-3 transition">Completar Compra</button>
+          <button onclick="clearCart()" class="w-full bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 rounded-xl border border-gray-200 transition">Vaciar Carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+
+  <!-- ================= RECOMENDADA ================= -->
+
+  <section class="py-16 px-6 bg-white border-t">
+    <div class="container mx-auto">
+      <h2 class="text-4xl font-extrabold text-center mb-12 scroll-reveal fade-up">
+        Colección Recomendada
+      </h2>
+      <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
+        Herramientas seleccionadas para potenciar la enseñanza digital y el aprendizaje colaborativo.
+      </p>
+
+      <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-8 scroll-reveal fade-up delay-100">
+        <!-- Card 1 -->
+        <div data-product data-title="Simulador de Laboratorio" data-category="vr" data-price="180"
+          class="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <img src="https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=500&h=400&fit=crop"
+            alt="Simulador de Laboratorio"
+            class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+          <div class="p-6">
+            <h3 class="text-lg font-bold mb-2">Simulador de Laboratorio</h3>
+            <p class="text-sm text-gray-600 mb-4">Prácticas interactivas en entornos virtuales 3D.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-blue-600 font-bold text-xl">180 Tokens</span>
+              <button data-add-to-cart
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">add_shopping_cart</span>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div data-product data-title="Gestor de Clases Virtuales" data-category="apps" data-price="120"
+          class="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=500&h=400&fit=crop"
+            alt="Gestor de Clases Virtuales"
+            class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+          <div class="p-6">
+            <h3 class="text-lg font-bold mb-2">Gestor de Clases Virtuales</h3>
+            <p class="text-sm text-gray-600 mb-4">Planifica sesiones, tareas y reportes académicos.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-blue-600 font-bold text-xl">120 Tokens</span>
+              <button data-add-to-cart
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">shopping_cart</span>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div data-product data-title="Biblioteca Virtual" data-category="apps" data-price="95"
+          class="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500&h=400&fit=crop"
+            alt="Biblioteca Virtual"
+            class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+          <div class="p-6">
+            <h3 class="text-lg font-bold mb-2">Biblioteca Virtual</h3>
+            <p class="text-sm text-gray-600 mb-4">Acceso a miles de recursos académicos digitales.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-blue-600 font-bold text-xl">95 Tokens</span>
+              <button data-add-to-cart
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">shopping_cart</span>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div data-product data-title="Analizador de Desempeño" data-category="ia" data-price="150"
+          class="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <img src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?w=500&h=400&fit=crop"
+            alt="Analizador de Desempeño"
+            class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+          <div class="p-6">
+            <h3 class="text-lg font-bold mb-2">Analizador de Desempeño</h3>
+            <p class="text-sm text-gray-600 mb-4">Evaluaciones asistidas con IA educativa.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-blue-600 font-bold text-xl">150 Tokens</span>
+              <button data-add-to-cart
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">add_shopping_cart</span>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div data-product data-title="Panel de Seguimiento" data-category="apps" data-price="110"
+          class="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <img
+            src="https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?q=80&w=873&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Panel de Seguimiento"
+            class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+          <div class="p-6">
+            <h3 class="text-lg font-bold mb-2">Panel de Seguimiento</h3>
+            <p class="text-sm text-gray-600 mb-4">Visualiza métricas de avance y desempeño.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-blue-600 font-bold text-xl">110 Tokens</span>
+              <button data-add-to-cart
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">shopping_cart</span>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div data-product data-title="Aula Interactiva 360" data-category="vr" data-price="220"
+          class="group relative bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <img
+            src="https://images.unsplash.com/photo-1758012228738-4f2b6e91ad04?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Aula Interactiva 360"
+            class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+          <div class="p-6">
+            <h3 class="text-lg font-bold mb-2">Aula Interactiva 360</h3>
+            <p class="text-sm text-gray-600 mb-4">Entornos inmersivos para clases presenciales y remotas.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-blue-600 font-bold text-xl">220 Tokens</span>
+              <button data-add-to-cart
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">shopping_cart</span>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+<!-- 🔹 SCRIPTS UNIFICADOS -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* =====================================================
+     🔐 SESIÓN Y USUARIO
+  ===================================================== */
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userSection = document.getElementById("user-section");
+  const cartCount = document.getElementById("cart-count");
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  cartCount.textContent = cart.length;
+
+  // Render de usuario activo o login
+  if (user) {
+    userSection.innerHTML = `
+      <div class="flex items-center gap-3">
+        <span class="hidden md:block text-sm text-gray-700">👋 Hola, <strong>${user.name}</strong></span>
+        <button id="logoutBtn" title="Cerrar sesión"
+          class="material-symbols-outlined text-3xl cursor-pointer text-blue-700 hover:text-red-500 transition">
+          logout
+        </button>
+      </div>`;
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      Swal.fire({
+        title: "¿Cerrar sesión?",
+        text: "Se cerrará tu sesión actual.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2563eb",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Sí, cerrar",
+        cancelButtonText: "Cancelar"
+      }).then((res) => {
+        if (res.isConfirmed) {
+          localStorage.removeItem("user");
+          Swal.fire({
+            icon: "success",
+            title: "Sesión cerrada",
+            showConfirmButton: false,
+            timer: 1300
+          }).then(() => {
+            window.location.href = "index_tres_copy.html";
+          });
+        }
+      });
+    });
+  }
+
+  /* =====================================================
+     🛒 FUNCIONES DE CARRITO
+  ===================================================== */
+  const container = document.getElementById("cart-items");
+  const itemCount = document.getElementById("item-count");
+  const subtotalEl = document.getElementById("subtotal");
+  const totalEl = document.getElementById("total");
+
+  function renderCart() {
+    container.innerHTML = "";
+    if (cart.length === 0) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl border border-gray-100 p-16 text-center">
+          <span class="material-symbols-outlined text-6xl text-gray-300 mb-4 block">shopping_cart</span>
+          <p class="text-gray-500 text-lg">Tu carrito está vacío</p>
+        </div>`;
+      itemCount.textContent = "0 productos";
+      subtotalEl.textContent = "0 Tokens";
+      totalEl.textContent = "0 Tokens";
+      return;
+    }
+
+    let total = 0, totalItems = 0;
+    cart.forEach((item, index) => {
+      const price = parseFloat(item.price) || 10;
+      const qty = item.qty || 1;
+      const subtotal = price * qty;
+      total += subtotal; totalItems += qty;
+
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow";
+      card.innerHTML = `
+        <div class="flex gap-6">
+          <div class="flex-shrink-0">
+            <img src="${item.img || 'https://via.placeholder.com/150'}"
+                 alt="${item.title || 'Producto'}"
+                 class="product-img w-52 h-52 object-contain rounded-xl cursor-pointer"
+                 onclick="openProductDetail(${index})"/>
+          </div>
+          <div class="flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">${item.title || 'Sin título'}</h3>
+              <p class="text-2xl font-bold text-gray-900 mb-4">${price} Tokens</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button onclick="updateQty(${index}, -1)" class="w-10 h-10 border border-gray-300 rounded-lg">−</button>
+              <span class="w-12 text-center font-semibold text-lg">${qty}</span>
+              <button onclick="updateQty(${index}, 1)" class="w-10 h-10 border border-gray-300 rounded-lg">+</button>
+            </div>
+          </div>
+          <div class="flex flex-col items-end justify-between min-w-[130px]">
+            <span class="text-2xl font-bold text-gray-900">${subtotal} Tokens</span>
+            <button onclick="removeItem(${index})" class="text-red-500 hover:text-red-700 text-sm flex items-center gap-1">
+              <span class="material-symbols-outlined text-lg">delete</span>Eliminar
+            </button>
+          </div>
+        </div>`;
+      container.appendChild(card);
+    });
+
+    itemCount.textContent = `${totalItems} producto${totalItems !== 1 ? 's' : ''}`;
+    subtotalEl.textContent = `${total} Tokens`;
+    totalEl.textContent = `${total} Tokens`;
+  }
+
+  window.updateQty = (i, c) => {
+    cart[i].qty = Math.max(1, (cart[i].qty || 1) + c);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  };
+
+  window.removeItem = (i) => {
+    cart.splice(i, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  };
+
+  window.clearCart = () => {
+    cart = [];
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  };
+
+  window.checkout = () => {
+    if (!user) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Debes iniciar sesión',
+        confirmButtonText: 'Ir al login',
+        confirmButtonColor: '#2563eb'
+      }).then(() => window.location.href = "login.html");
+      return;
+    }
+    Swal.fire({
+      icon: 'success',
+      title: '¡Compra exitosa!',
+      text: 'Revisa tu correo para más información.',
+      confirmButtonColor: '#10b981'
+    }).then(() => {
+      cart = [];
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    });
+  };
+
+  /* =====================================================
+     🧩 NUEVO: AÑADIR PRODUCTOS Y ABRIR DETALLE
+  ===================================================== */
+  const state = { items: JSON.parse(localStorage.getItem("cart") || "[]"), cartCount: 0 };
+
+  function updateCartBadge() {
+    const badge = document.getElementById("cart-count");
+    if (badge) badge.textContent = state.items.length;
+  }
+
+  function addToCart(title, img, price) {
+    const found = state.items.find(i => i.title === title);
+    if (found) {
+      found.qty += 1;
+    } else {
+      state.items.push({ title, img, price: parseFloat(price), qty: 1 });
+    }
+    localStorage.setItem("cart", JSON.stringify(state.items));
+    updateCartBadge();
+    Swal.fire({
+      toast: true,
+      position: "bottom",
+      icon: "success",
+      title: `${title} añadido al carrito`,
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
+
+  function bindCartButtons() {
+    document.querySelectorAll("[data-product] [data-add-to-cart]").forEach(btn => {
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        const card = btn.closest("[data-product]");
+        const title = card.dataset.title || card.querySelector("h3")?.textContent?.trim();
+        const img = card.querySelector("img")?.src || "";
+        const price = card.dataset.price || "10";
+        addToCart(title, img, price);
+      });
+    });
+  }
+
+  function bindProductImages() {
+    document.querySelectorAll("[data-product] img").forEach(img => {
+      img.addEventListener("click", () => {
+        const card = img.closest("[data-product]");
+        const title = card.dataset.title || "Producto";
+        const price = card.dataset.price || "0";
+        const category = card.dataset.category || "general";
+        const description = card.querySelector("p")?.textContent?.trim() || "Herramienta educativa digital.";
+        const src = img.src;
+        const productData = { title, price, category, description, img: src };
+        localStorage.setItem("selectedProduct", JSON.stringify(productData));
+        document.body.style.transition = "opacity 0.6s ease-in-out";
+        document.body.style.opacity = "0";
+        setTimeout(() => { window.location.href = "producto.html"; }, 600);
+      });
+    });
+  }
+
+  // 🔸 Desde carrito abrir detalle de un producto
+  window.openProductDetail = (index) => {
+    const product = cart[index];
+    if (!product) return;
+    localStorage.setItem("selectedProduct", JSON.stringify(product));
+    document.body.style.transition = "opacity 0.6s ease-in-out";
+    document.body.style.opacity = "0";
+    setTimeout(() => { window.location.href = "producto.html"; }, 600);
+  };
+
+  // Inicializar
+  renderCart();
+  bindCartButtons();
+  bindProductImages();
+  updateCartBadge();
+});
+</script>
+
+</body>
+</html>

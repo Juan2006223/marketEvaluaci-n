@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UPN EduTech – Detalle del Producto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .thumb { transition: all .3s ease; cursor: pointer; border: 2px solid transparent; }
+    .thumb:hover { transform: translateY(-4px); border-color: #2563eb; }
+    .active-thumb { border-color: #2563eb; }
+  </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="container mx-auto flex items-center justify-between px-6 py-3">
+      <a href="index.html" class="flex items-center gap-2 font-extrabold text-blue-700 text-lg">
+        <span class="material-symbols-outlined">school</span> UPN EduTech
+      </a>
+      <a href="cart.html" class="relative">
+        <span class="material-symbols-outlined text-3xl text-gray-700 hover:text-blue-700">shopping_cart</span>
+        <span id="cart-count" class="absolute -top-1 -right-2 bg-blue-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">0</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container mx-auto px-6 lg:px-12 py-12">
+    <div class="grid lg:grid-cols-3 gap-12">
+      
+      <!-- Galería -->
+      <div class="lg:col-span-2 flex gap-6">
+        <div class="flex flex-col gap-3">
+          <img class="thumb w-20 h-20 object-cover rounded-lg active-thumb" id="thumb1"/>
+          <img class="thumb w-20 h-20 object-cover rounded-lg" id="thumb2"/>
+          <img class="thumb w-20 h-20 object-cover rounded-lg" id="thumb3"/>
+        </div>
+        <div class="flex-1 flex items-center justify-center">
+          <img id="main-img" class="w-full h-[480px] object-contain rounded-2xl shadow-md bg-white p-4"/>
+        </div>
+      </div>
+
+      <!-- Panel lateral derecho -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm h-fit">
+        <h1 id="product-title" class="text-2xl font-extrabold text-gray-900 mb-2">Título del producto</h1>
+        <p id="product-desc" class="text-gray-600 text-sm mb-4">Descripción del producto educativo digital.</p>
+
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-3xl font-bold text-blue-700" id="product-price">0 Tokens</p>
+          <button id="fav-btn" class="text-gray-400 hover:text-red-500 transition">
+            <span class="material-symbols-outlined text-3xl">favorite</span>
+          </button>
+        </div>
+
+        <div class="text-green-600 font-semibold text-sm mb-1">✔ Envío gratis a todo el país</div>
+        <p class="text-gray-500 text-xs mb-4">Entrega en 24 – 48 h según tu ubicación</p>
+
+        <div class="text-green-600 font-semibold text-sm mb-1">↩ Devolución garantizada</div>
+        <p class="text-gray-500 text-xs mb-4">Tienes 30 días para cambios o reembolsos</p>
+
+        <div class="border-t border-gray-200 my-4"></div>
+
+        <p class="text-gray-800 text-sm font-medium mb-2">Disponibilidad:</p>
+        <p class="text-sm text-green-600 font-semibold mb-6">✅ En stock (disponibles)</p>
+
+        <div class="flex flex-col gap-3 mb-8">
+          <button class="bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold transition shadow-md">
+            Comprar ahora
+          </button>
+          <button id="add-cart-btn"
+                  class="bg-white border border-blue-600 text-blue-700 hover:bg-blue-50 py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">add_shopping_cart</span> Agregar al carrito
+          </button>
+        </div>
+
+        <div class="border-t border-gray-200 pt-4 mt-4 text-sm">
+          <p class="font-semibold text-gray-700 mb-2">Vendido por:</p>
+          <div class="flex items-center gap-3 mb-3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Logo_UPN_Colombia.svg" class="w-10 h-10 rounded-full border" alt="Tienda UPN">
+            <div>
+              <p class="font-semibold text-gray-800">Tienda oficial UPN</p>
+              <p class="text-xs text-gray-500">+1 000 ventas · Garantía académica</p>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 leading-5">
+            Todos los productos están respaldados por UPN EduTech y cuentan con garantía de calidad y soporte institucional.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Características y detalles -->
+    <div class="mt-12 border-t border-gray-200 pt-8 max-w-4xl">
+      <h2 class="text-2xl font-bold mb-4 text-gray-900">Características del producto</h2>
+      <ul class="space-y-2 text-gray-700">
+        <li>📘 Acceso ilimitado a los módulos del curso.</li>
+        <li>🧠 Recursos descargables y evaluaciones interactivas.</li>
+        <li>💻 Compatible con plataformas LMS y móviles.</li>
+        <li>🎓 Soporte técnico permanente.</li>
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    // Recuperar producto guardado
+    const params = new URLSearchParams(window.location.search);
+    const productData = JSON.parse(localStorage.getItem("selectedProduct") || "{}");
+
+    const titleEl = document.getElementById("product-title");
+    const descEl = document.getElementById("product-desc");
+    const priceEl = document.getElementById("product-price");
+    const mainImg = document.getElementById("main-img");
+    const thumbs = [document.getElementById("thumb1"), document.getElementById("thumb2"), document.getElementById("thumb3")];
+
+    if (productData.title) {
+      titleEl.textContent = productData.title;
+      descEl.textContent = productData.desc || "Recurso digital para potenciar el aprendizaje.";
+      priceEl.textContent = `${productData.price} Tokens`;
+      mainImg.src = productData.img || "https://via.placeholder.com/500";
+      thumbs.forEach(t => t.src = productData.img || "https://via.placeholder.com/120");
+    }
+
+    thumbs.forEach(thumb => {
+      thumb.addEventListener("click", () => {
+        mainImg.src = thumb.src;
+        thumbs.forEach(t => t.classList.remove("active-thumb"));
+        thumb.classList.add("active-thumb");
+      });
+    });
+
+    // Carrito
+    const badge = document.getElementById("cart-count");
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    badge.textContent = cart.reduce((s, i) => s + (i.qty || 1), 0);
+
+    document.getElementById("add-cart-btn").addEventListener("click", () => {
+      if (!productData.title) return;
+      const existing = cart.find(i => i.title === productData.title);
+      if (existing) existing.qty += 1;
+      else cart.push({ title: productData.title, img: productData.img, price: productData.price, qty: 1 });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      badge.textContent = cart.reduce((s, i) => s + (i.qty || 1), 0);
+
+      Swal.fire({
+        icon: "success",
+        title: "Producto añadido",
+        text: `${productData.title} se agregó al carrito`,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    });
+
+    // Favorito
+    const favBtn = document.getElementById("fav-btn");
+    favBtn.addEventListener("click", () => {
+      favBtn.classList.toggle("text-red-500");
+      favBtn.querySelector("span").style.fontVariationSettings = favBtn.classList.contains("text-red-500")
+        ? "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+        : "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24";
+    });
+  </script>
+</body>
+</html>
+

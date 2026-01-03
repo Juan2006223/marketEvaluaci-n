@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPN EduTech – Iniciar Sesión</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-image: url('https://images.unsplash.com/photo-1554356391-8bbd5018add1?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .input-modern {
+            @apply w-full px-4 py-3 bg-white/60 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all;
+        }
+
+        .input-modern:focus {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-modern {
+            @apply w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow-md;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .illustration {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .illustration::before {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+
+        .illustration::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            bottom: -80px;
+            left: -80px;
+        }
+
+        .social-btn {
+            @apply w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer;
+        }
+
+        .link-text {
+            @apply text-blue-600 hover:text-blue-700 text-sm font-medium cursor-pointer transition-colors;
+        }
+
+        .logo-container {
+            filter: brightness(0) invert(1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+
+    <div class="flex w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl">
+
+        <!-- Panel Izquierdo - Ilustración -->
+        <div class="hidden lg:flex lg:w-5/12 illustration items-center justify-center p-12 relative">
+            <div class="relative z-10 text-center">
+                <div class="logo-container mb-12">
+                    <img src="https://www.upn.edu.co/wp-content/uploads/2025/08/Identidad-UPN-25-horizontal-blanco-fondo-transparente.png"
+                        alt="UPN Logo" class="w-56 mx-auto">
+                </div>
+
+                <h2 class="text-3xl font-bold text-white mb-4">
+                    Innovación Educativa
+                </h2>
+                <p class="text-blue-100 text-sm leading-relaxed max-w-xs mx-auto">
+                    Plataforma integral para la gestión y transformación del aprendizaje universitario
+                </p>
+
+                <div class="flex gap-3 justify-center mt-12">
+                    <div class="social-btn">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                    </div>
+                    <div class="social-btn">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                        </svg>
+                    </div>
+                    <div class="social-btn">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Derecho – Estilizado -->
+        <div class="w-full lg:w-7/12 flex items-center justify-center bg-[#6699ff] p-8 lg:p-16">
+            <div
+                class="w-full max-w-md bg-white rounded-2xl shadow-md p-10 transition-all duration-300 hover:shadow-lg">
+
+                <!-- Logo móvil -->
+                <div class="lg:hidden mb-8 flex justify-center">
+                    <img src="https://www.upn.edu.co/wp-content/uploads/2025/08/Identidad-UPN-25-horizontal-blanco-fondo-transparente.png"
+                        alt="UPN Logo" class="w-40"
+                        style="filter: brightness(0) saturate(100%) invert(27%) sepia(94%) saturate(2264%) hue-rotate(213deg) brightness(93%) contrast(92%);">
+                </div>
+
+                <div class="mb-8 text-center">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Iniciar sesión</h1>
+                    <p class="text-gray-500 text-sm">Desbloquea tu mundo.</p>
+                </div>
+
+                <form id="login-form" class="space-y-6">
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Correo institucional</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 12H8m0 0l4-4m-4 4l4 4" />
+                                </svg>
+                            </span>
+                            <input id="email" type="email" required
+                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200"
+                                placeholder="nombre@upn.edu.co">
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 11c0-1.1.9-2 2-2s2 .9 2 2v2m-8 4h8v-4m0 0V9a2 2 0 00-2-2h-4a2 2 0 00-2 2v4z" />
+                                </svg>
+                            </span>
+                            <input id="password" type="password" required
+                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200"
+                                placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-600">Recordarme</span>
+                        </label>
+                        <a href="#" class="link-text">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg 
+         bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold 
+         shadow-md hover:shadow-lg focus:outline-none focus:ring-2 
+         focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 12h14m-7-7l7 7-7 7" />
+                        </svg>
+                        Iniciar sesión
+                    </button>
+
+
+
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-gray-500">o continúa con</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button"
+                            class="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="#4285F4"
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                <path fill="#34A853"
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                <path fill="#FBBC05"
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                <path fill="#EA4335"
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">Google</span>
+                        </button>
+
+                        <button type="button"
+                            class="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">Facebook</span>
+                        </button>
+                    </div>
+
+                    <p class="text-center text-sm text-gray-600 mt-6">
+                        ¿No tienes cuenta?
+                        <a href="#" class="link-text">Regístrate aquí</a>
+                    </p>
+                </form>
+
+                <p class="text-xs text-gray-400 text-center mt-10">
+                    © 2025 UPN EduTech. Plataforma de Innovación Educativa
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+  <script>
+document.getElementById("login-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const pass = document.getElementById("password").value.trim();
+
+  // 🧩 Usuarios predefinidos
+  const adminUser = { email: "admin@upn.edu.co", password: "admin123", role: "admin" };
+  const demoUser  = { email: "demo@upn.edu.co", password: "12345", role: "user" };
+
+  let userSession = null;
+
+  // 🧠 Validación de credenciales
+  if (email === adminUser.email && pass === adminUser.password) {
+    userSession = { loggedIn: true, name: "Administrador", email, role: "admin" };
+  } 
+  else if (email === demoUser.email && pass === demoUser.password) {
+    userSession = { loggedIn: true, name: "Usuario Demo", email, role: "user" };
+  } 
+  else if (email.endsWith("@upn.edu.co")) {
+    userSession = { loggedIn: true, name: email.split("@")[0], email, role: "user" };
+  }
+
+  // ✅ Inicio de sesión exitoso
+  if (userSession) {
+    localStorage.setItem("user", JSON.stringify(userSession));
+
+    Swal.fire({
+      icon: "success",
+      title: `¡Bienvenido ${userSession.role === "admin" ? "Administrador" : "Usuario"}!`,
+      text: "Redirigiendo...",
+      showConfirmButton: false,
+      timer: 1500,
+      customClass: { popup: "rounded-xl" }
+    });
+
+    setTimeout(() => {
+      // 🔁 Redirección según rol
+      if (userSession.role === "admin") {
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "index_tres_copy.html";
+      }
+    }, 1500);
+  } 
+  else {
+    // ⚠️ Credenciales incorrectas
+    Swal.fire({
+      icon: "error",
+      title: "Credenciales incorrectas",
+      text: "Verifica tu correo y contraseña",
+      confirmButtonColor: "#2563eb",
+      customClass: { popup: "rounded-xl" }
+    });
+  }
+});
+</script>
+
+
+
+</body>
+
+</html>
