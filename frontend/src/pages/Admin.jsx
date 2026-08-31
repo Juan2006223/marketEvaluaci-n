@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, LogOut, Search, Plus, Share, Edit, Trash2, X } from 'lucide-react';
+import { LayoutDashboard, LogOut, Search, Plus, Share, Edit, Trash2, X, ImagePlus, Tags, PanelsTopLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import api from '../api';
@@ -11,10 +11,17 @@ const Admin = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [sections, setSections] = useState([]);
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState('');
+    const [manager, setManager] = useState(null);
+    const [editingCatalogItem, setEditingCatalogItem] = useState(null);
+    const [catalogForm, setCatalogForm] = useState({ name: '', slug: '', description: '', display_order: 0, is_active: true });
     const [formData, setFormData] = useState({
         title: '',
         price: '',
-        category_id: 1,
+        category: '1',
         image_url: '',
         short_description: '',
         description: '',
@@ -30,7 +37,21 @@ const Admin = () => {
             navigate('/login');
         }
         fetchProducts();
+        fetchCatalogConfiguration();
     }, [navigate]);
+
+    const fetchCatalogConfiguration = async () => {
+        try {
+            const [cats, secs] = await Promise.all([
+                api.get('categorias/', { params: { all: 'true' } }),
+                api.get('secciones/'),
+            ]);
+            setCategories(Array.isArray(cats.data) ? cats.data : cats.data.results || []);
+            setSections(Array.isArray(secs.data) ? secs.data : secs.data.results || []);
+        } catch (error) {
+            console.error('No se pudo cargar la configuración del catálogo:', error);
+        }
+    };
 
     const fetchProducts = async () => {
         try {
@@ -81,7 +102,7 @@ const Admin = () => {
             setFormData({
                 title: product.title,
                 price: Math.floor(product.price),
-                category_id: product.category_id || 1,
+                category: String(product.category_id || 1),
                 image_url: product.image_url || '',
                 short_description: product.short_description || '',
                 description: product.description || '',
@@ -92,23 +113,28 @@ const Admin = () => {
             setFormData({
                 title: '',
                 price: '',
-                category_id: 1,
+                category: '1',
                 image_url: '',
                 short_description: '',
                 description: '',
                 section: 'destacadas'
             });
         }
+        setImageFile(null);
+        setImagePreview(product?.image_url || product?.image || '');
         setIsModalOpen(true);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const payload = new FormData();
+            Object.entries(formData).forEach(([key, value]) => payload.append(key, value));
+            if (imageFile) payload.append('image_upload', imageFile);
             if (editingProduct) {
-                await api.put(`productos/${editingProduct.id}/`, formData);
+                await api.put(`productos/${editingProduct.id}/`, payload);
             } else {
-                await api.post('productos/', formData);
+                await api.post('productos/', payload);
             }
 
             Swal.fire({
@@ -132,6 +158,31 @@ const Admin = () => {
                 text: errorMsg,
                 confirmButtonColor: '#1f57ff'
             });
+        }
+    };
+
+    const abrirGestor = (tipo, item = null) => {
+        setManager(tipo);
+        setEditingCatalogItem(item);
+        setCatalogForm(item ? { ...item } : {
+            name: '', slug: '', description: '', display_order: (sections.length + 1) * 10, is_active: true,
+        });
+    };
+
+    const guardarCatalogo = async (e) => {
+        e.preventDefault();
+        const base = manager === 'categorias' ? 'categorias/' : 'secciones/';
+        const data = manager === 'categorias'
+            ? { name: catalogForm.name, slug: catalogForm.slug, description: catalogForm.description, is_active: catalogForm.is_active }
+            : catalogForm;
+        try {
+            if (editingCatalogItem) await api.put(`${base}${editingCatalogItem.id}/`, data);
+            else await api.post(base, data);
+            await fetchCatalogConfiguration();
+            setManager(null);
+            Swal.fire({ icon: 'success', title: 'Configuración guardada', timer: 1200, showConfirmButton: false });
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'No se pudo guardar', text: error.response?.data?.error || 'Revisa el nombre y el identificador.' });
         }
     };
 
@@ -219,6 +270,12 @@ const Admin = () => {
                     >
                         <span className="material-symbols-outlined">add</span>
                         <span className="hidden sm:inline">Nuevo producto</span>
+                    </button>
+                    <button onClick={() => abrirGestor('categorias')} className="hidden lg:flex items-center gap-2 px-3 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl">
+                        <Tags size={17} /> Categorías
+                    </button>
+                    <button onClick={() => abrirGestor('secciones')} className="hidden lg:flex items-center gap-2 px-3 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl">
+                        <PanelsTopLeft size={17} /> Secciones
                     </button>
 
                     <div className="ml-auto flex items-center gap-2">
@@ -358,24 +415,25 @@ const Admin = () => {
                                 <label className="text-sm font-bold text-gray-700">Categoría</label>
                                 <select
                                     className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-blue-500 font-medium"
-                                    value={formData.category_id}
-                                    onChange={(e) => setFormData({ ...formData, category_id: Number(e.target.value) })}
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                 >
-                                    <option value="1">IA y Analítica</option>
-                                    <option value="2">Gamificación</option>
-                                    <option value="3">Realidad virtual</option>
-                                    <option value="4">Aplicaciones educativas</option>
+                                    {categories.filter(c => c.is_active).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                 </select>
                             </div>
 
                             <div className="md:col-span-2 space-y-2">
-                                <label className="text-sm font-bold text-gray-700">Imagen (URL)</label>
-                                <input
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-blue-500 font-medium"
-                                    placeholder="https://images.unsplash.com/..."
-                                    value={formData.image_url}
-                                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                                />
+                                <label className="text-sm font-bold text-gray-700">Imagen del recurso</label>
+                                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-blue-300 bg-blue-50/40 px-4 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50">
+                                    <ImagePlus size={20} /> Elegir archivo (JPG, PNG o WEBP · máximo 2 MB)
+                                    <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={(e) => {
+                                        const archivo = e.target.files?.[0];
+                                        if (!archivo) return;
+                                        setImageFile(archivo);
+                                        setImagePreview(URL.createObjectURL(archivo));
+                                    }} />
+                                </label>
+                                {imagePreview && <img src={imagePreview} alt="Vista previa del recurso" className="mt-3 h-28 w-full rounded-xl object-cover border border-slate-200" />}
                             </div>
 
                             <div className="space-y-2">
@@ -385,9 +443,7 @@ const Admin = () => {
                                     value={formData.section}
                                     onChange={(e) => setFormData({ ...formData, section: e.target.value })}
                                 >
-                                    <option value="destacadas">Soluciones Destacadas</option>
-                                    <option value="mes">Innovaciones del Mes</option>
-                                    <option value="recomendadas">Colección Recomendada</option>
+                                    {sections.filter(s => s.is_active).map(s => <option key={s.id} value={s.slug}>{s.name}</option>)}
                                 </select>
                             </div>
 
@@ -425,6 +481,25 @@ const Admin = () => {
                                     {editingProduct ? 'Guardar Cambios' : 'Crear Producto'}
                                 </button>
                             </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {manager && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm" onClick={() => setManager(null)} />
+                    <div className="relative w-full max-w-3xl rounded-2xl bg-white p-7 shadow-2xl">
+                        <div className="mb-6 flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-widest text-blue-600">Configuración del Marketplace</p><h2 className="text-2xl font-black text-slate-900">{manager === 'categorias' ? 'Categorías' : 'Secciones de inicio'}</h2></div><button onClick={() => setManager(null)} className="rounded-lg p-2 hover:bg-slate-100"><X size={20} /></button></div>
+                        <div className="mb-6 max-h-48 divide-y overflow-y-auto rounded-xl border border-slate-200">
+                            {(manager === 'categorias' ? categories : sections).map(item => <button key={item.id} onClick={() => abrirGestor(manager, item)} className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-blue-50"><span><b className="text-slate-800">{item.name}</b><span className="ml-2 text-xs text-slate-400">/{item.slug}</span></span><Edit size={16} className="text-blue-600" /></button>)}
+                        </div>
+                        <form onSubmit={guardarCatalogo} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <label className="grid gap-2 text-sm font-bold text-slate-700">Nombre<input required className="rounded-xl border border-slate-200 px-4 py-3 font-medium outline-none focus:border-blue-500" value={catalogForm.name} onChange={e => setCatalogForm({ ...catalogForm, name: e.target.value })} /></label>
+                            <label className="grid gap-2 text-sm font-bold text-slate-700">Identificador (slug)<input required pattern="[a-z0-9-]+" className="rounded-xl border border-slate-200 px-4 py-3 font-medium outline-none focus:border-blue-500" value={catalogForm.slug} onChange={e => setCatalogForm({ ...catalogForm, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })} /></label>
+                            {manager === 'secciones' && <label className="grid gap-2 text-sm font-bold text-slate-700">Orden de aparición<input type="number" min="0" className="rounded-xl border border-slate-200 px-4 py-3 font-medium outline-none focus:border-blue-500" value={catalogForm.display_order || 0} onChange={e => setCatalogForm({ ...catalogForm, display_order: Number(e.target.value) })} /></label>}
+                            <label className={`grid gap-2 text-sm font-bold text-slate-700 ${manager === 'secciones' ? '' : 'md:col-span-2'}`}>Descripción<textarea rows="2" className="rounded-xl border border-slate-200 px-4 py-3 font-medium outline-none focus:border-blue-500" value={catalogForm.description || ''} onChange={e => setCatalogForm({ ...catalogForm, description: e.target.value })} /></label>
+                            <label className="flex items-center gap-2 text-sm font-semibold text-slate-700"><input type="checkbox" checked={Boolean(catalogForm.is_active)} onChange={e => setCatalogForm({ ...catalogForm, is_active: e.target.checked })} /> Activa y visible</label>
+                            <div className="flex justify-end gap-3 md:col-span-2"><button type="button" onClick={() => setManager(null)} className="rounded-xl px-5 py-3 font-bold text-slate-500 hover:bg-slate-100">Cancelar</button><button className="rounded-xl bg-[#1f57ff] px-5 py-3 font-bold text-white shadow-lg">{editingCatalogItem ? 'Guardar cambios' : 'Crear'}</button></div>
                         </form>
                     </div>
                 </div>

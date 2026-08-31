@@ -1,8 +1,9 @@
 """
 Serializadores DRF — adaptadores de infraestructura para validación y serialización HTTP.
 """
+import base64
 from rest_framework import serializers
-from modulos.Productos.Core.infraestructura.models import CategoriaORM, ProductoORM
+from modulos.Productos.Core.infraestructura.models import CategoriaORM, ProductoORM, SeccionORM
 
 class CategoriaSerializer(serializers.ModelSerializer):
     """Serializador de salida para Categorías."""
@@ -20,6 +21,20 @@ class CategoriaCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriaORM
         fields = ["name", "slug", "description", "is_active"]
+
+
+class SeccionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SeccionORM
+        fields = ["id", "name", "slug", "description", "display_order", "is_active", "created_at", "updated_at"]
+
+
+class ImagenRecursoField(serializers.ImageField):
+    def to_internal_value(self, data):
+        archivo = super().to_internal_value(data)
+        if archivo.size > 2 * 1024 * 1024:
+            raise serializers.ValidationError("La imagen no puede superar 2 MB.")
+        return archivo
 
 
 class ProductoSerializer(serializers.ModelSerializer):
@@ -65,12 +80,21 @@ class ProductoCreateSerializer(serializers.Serializer):
     category          = serializers.CharField()
     image_url         = serializers.CharField(max_length=1000, required=False, allow_blank=True, default="")
     external_url      = serializers.CharField(max_length=1000, required=False, allow_blank=True, default="")
-    section           = serializers.ChoiceField(
-        choices=["destacadas", "mes", "recomendadas", "general"],
-        default="destacadas"
-    )
+    section           = serializers.SlugField(max_length=100, required=False, default="destacadas")
+    image_upload      = ImagenRecursoField(required=False, write_only=True)
     is_featured       = serializers.BooleanField(required=False, default=False)
     is_active         = serializers.BooleanField(required=False, default=True)
+
+    def validate(self, attrs):
+        seccion = attrs.get("section")
+        if seccion and not SeccionORM.objects.filter(slug=seccion, is_active=True).exists():
+            raise serializers.ValidationError({"section": "Selecciona una sección activa creada en el panel."})
+        archivo = attrs.pop("image_upload", None)
+        if archivo:
+            contenido = base64.b64encode(archivo.read()).decode("ascii")
+            attrs["image_data"] = f"data:{archivo.content_type};base64,{contenido}"
+            attrs["image_url"] = ""
+        return attrs
 
 
 def entidad_producto_a_dict(producto) -> dict:

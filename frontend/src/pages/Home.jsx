@@ -2,12 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useProductos } from '../features/productos/presentacion/hooks/useProductos';
 import ProductCard from '../components/ProductCard';
+import { clienteHttp } from '../shared/api/clienteHttp';
 
 const Home = () => {
     const { productos: products, cargando: loading } = useProductos();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [monthCategory, setMonthCategory] = useState('all');
+    const [sections, setSections] = useState([]);
     const carouselRef = useRef(null);
 
     useEffect(() => {
@@ -32,6 +34,12 @@ const Home = () => {
         }
     }, [loading, products]);
 
+    useEffect(() => {
+        clienteHttp.get('secciones/')
+            .then(({ data }) => setSections((Array.isArray(data) ? data : data.results || []).filter(s => s.is_active)))
+            .catch(() => setSections([]));
+    }, []);
+
     const scrollMonthProducts = (direction) => {
         if (carouselRef.current) {
             const scrollAmount = 360;
@@ -55,6 +63,7 @@ const Home = () => {
     const mesOriginal = catalogo.filter(p => p.section === 'mes');
     const mes = (mesOriginal.length ? mesOriginal : catalogo).filter(p => monthCategory === 'all' || p.category_slug === monthCategory);
     const recomendadas = catalogo.filter(p => p.section === 'recomendadas');
+    const seccionesAdicionales = sections.filter(s => !['destacadas', 'mes', 'recomendadas', 'general'].includes(s.slug));
 
     return (
         <div className="bg-gray-50">
@@ -216,6 +225,23 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {seccionesAdicionales.map((seccion) => {
+                const recursos = catalogo.filter(p => p.section === seccion.slug);
+                return recursos.length ? (
+                    <section key={seccion.id} className="py-20 px-6 bg-gray-50 border-t border-gray-100">
+                        <div className="container mx-auto">
+                            <div className="max-w-2xl mb-12">
+                                <h2 className="text-4xl font-black mb-3 scroll-reveal fade-up">{seccion.name}</h2>
+                                {seccion.description && <p className="text-gray-500 scroll-reveal fade-up delay-100">{seccion.description}</p>}
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {recursos.map((p, idx) => <div key={p.id} className="h-full"><ProductCard product={p} index={idx} isRecomendada /></div>)}
+                            </div>
+                        </div>
+                    </section>
+                ) : null;
+            })}
 
         </div>
     );

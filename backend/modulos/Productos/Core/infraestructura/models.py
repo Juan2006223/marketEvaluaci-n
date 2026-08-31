@@ -24,6 +24,22 @@ class CategoriaORM(models.Model):
         ordering = ["name"]
 
 
+class SeccionORM(models.Model):
+    """Configuración administrable de una sección pública del Marketplace."""
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True, max_length=100)
+    description = models.TextField(blank=True, default="")
+    display_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = "productos"
+        db_table = "marketplace_section"
+        ordering = ["display_order", "name"]
+
+
 class ProductoORM(models.Model):
     RESOURCE_TYPE_CHOICES = [
         ("herramienta_digital", "Herramienta Digital"),
@@ -48,6 +64,7 @@ class ProductoORM(models.Model):
     category          = models.ForeignKey(CategoriaORM, related_name="products", on_delete=models.CASCADE)
     image_url         = models.URLField(max_length=1000, blank=True, default="")
     image             = models.ImageField(upload_to="products/", blank=True, null=True)
+    image_data        = models.TextField(blank=True, default="")
     external_url      = models.URLField(max_length=1000, blank=True, default="")
     section           = models.CharField(max_length=20, choices=SECTION_CHOICES, default="destacadas")
     is_featured       = models.BooleanField(default=False)

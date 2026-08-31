@@ -30,9 +30,11 @@ from modulos.Productos.Core.infraestructura.DjangoCategoriaRepository import Dja
 from modulos.Productos.Core.infraestructura.ProductoSerializer import (
     ProductoCreateSerializer,
     CategoriaCreateUpdateSerializer,
+    SeccionSerializer,
     entidad_producto_a_dict,
     entidad_categoria_a_dict,
 )
+from modulos.Productos.Core.infraestructura.models import SeccionORM
 
 class CatalogoPaginacion(PageNumberPagination):
     page_size = 12
@@ -187,3 +189,14 @@ class CategoriaController(viewsets.ViewSet):
             return Response({"mensaje": "Categoría eliminada"}, status=status.HTTP_204_NO_CONTENT)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SeccionController(viewsets.ModelViewSet):
+    """CRUD de secciones del inicio; productos conservan el slug como vínculo estable."""
+    queryset = SeccionORM.objects.all()
+    serializer_class = SeccionSerializer
+
+    def get_permissions(self):
+        if self.action in ("list", "retrieve"):
+            return [AllowAny()]
+        return [IsAdminUser()]
