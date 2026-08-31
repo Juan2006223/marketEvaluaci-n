@@ -19,9 +19,9 @@ const Home = () => {
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                    }
+                    // Al salir del área visible se restablece el estado inicial,
+                    // para que la entrada se repita al volver a desplazarse.
+                    entry.target.classList.toggle('revealed', entry.isIntersecting);
                 });
             }, observerOptions);
 
@@ -48,7 +48,9 @@ const Home = () => {
         const texto = `${p.title} ${p.short_description} ${p.description} ${p.category_name}`.toLocaleLowerCase('es-CO');
         return (!searchText || texto.includes(searchText)) && (selectedCategory === 'todo' || p.category_slug === selectedCategory);
     };
-    const catalogo = products.filter(coincideBusqueda);
+    // La API devuelve por fecha descendente. El orden estable por identificador
+    // conserva la composición visual original del mosaico destacado.
+    const catalogo = [...products.filter(coincideBusqueda)].sort((a, b) => Number(a.id) - Number(b.id));
     const destacadas = catalogo.filter(p => p.section === 'destacadas');
     const mesOriginal = catalogo.filter(p => p.section === 'mes');
     const mes = (mesOriginal.length ? mesOriginal : catalogo).filter(p => monthCategory === 'all' || p.category_slug === monthCategory);

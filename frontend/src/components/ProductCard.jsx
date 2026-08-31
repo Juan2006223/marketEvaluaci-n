@@ -44,7 +44,7 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
 
         return (
             <div
-                className={`relative ${isRowSpan ? 'md:row-span-2' : ''} ${isColSpan ? 'md:col-span-2' : ''} rounded-3xl overflow-hidden shadow-2xl group hover-reveal hover-scale transition-all duration-500`}
+                className={`scroll-reveal scale-in relative ${isRowSpan ? 'md:row-span-2' : ''} ${isColSpan ? 'md:col-span-2' : ''} rounded-3xl overflow-hidden shadow-2xl group hover-reveal hover-scale transition-all duration-500`}
                 style={{ animationDelay: `${delay}ms` }}
             >
                 <Link to={`/product/${product.id}`} className="block h-full transition-transform duration-700 ease-in-out hover:scale-105">
@@ -77,7 +77,7 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
     if (isRecomendada) {
         return (
             <div
-                className="group relative h-full flex flex-col bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500"
+                className="scroll-reveal fade-up group relative h-full flex flex-col bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-500"
                 style={{ animationDelay: `${delay}ms` }}
             >
                 <Link to={`/product/${product.id}`}>
@@ -108,7 +108,7 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
     // Estilo normal (para el carrusel "mes")
     return (
         <div
-            className="product-card bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-xl group hover-reveal hover-scale transition-all duration-500"
+            className="scroll-reveal fade-up product-card bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-xl group hover-reveal hover-scale transition-all duration-500"
             style={{ animationDelay: `${delay}ms` }}
         >
             <div className="relative overflow-hidden h-64">
