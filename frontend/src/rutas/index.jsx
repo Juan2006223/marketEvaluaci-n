@@ -5,7 +5,7 @@ import Inicio from '../pages/Home';
 import DetalleRecurso from '../pages/ProductDetail';
 import Login from '../pages/Login';
 import RecursosInteres from '../features/interes/presentacion/paginas/RecursosInteres';
-import PanelAdmin from '../features/admin/presentacion/paginas/PanelAdmin';
+import Admin from '../pages/Admin';
 import Cart from '../pages/Cart';
 import MisCursos from '../pages/MisCursos';
 import CursoPendiente from '../pages/CursoPendiente';
@@ -28,7 +28,7 @@ export default function Rutas() {
         path="/admin"
         element={
           <RutaProtegida>
-            <PanelAdmin />
+            <Admin />
           </RutaProtegida>
         }
       />

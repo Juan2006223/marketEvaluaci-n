@@ -96,12 +96,12 @@ const Login = () => {
         }
       `}</style>
 
-            <div className="flex w-full max-w-6xl rounded-[2.5rem] overflow-hidden shadow-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <div className="flex w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl">
 
                 {/* Panel Izquierdo - Ilustración */}
-                <div className="hidden lg:flex lg:w-5/12 illustration items-center justify-center p-16 relative">
-                    <div className="relative z-10 text-center space-y-8">
-                        <div className="bg-white/10 p-4 rounded-3xl backdrop-blur-md inline-block">
+                <div className="hidden lg:flex lg:w-5/12 illustration items-center justify-center p-12 relative">
+                    <div className="relative z-10 text-center">
+                        <div className="mb-12">
                             <img
                                 src="https://www.upn.edu.co/wp-content/uploads/2025/08/Identidad-UPN-25-horizontal-blanco-fondo-transparente.png"
                                 alt="UPN Logo"
@@ -109,32 +109,28 @@ const Login = () => {
                             />
                         </div>
                         <div>
-                            <h2 className="text-4xl font-black text-white mb-4 tracking-tight leading-none">Innovación Educativa</h2>
-                            <div className="h-1 w-20 bg-yellow-400 mx-auto my-6 rounded-full"></div>
-                            <p className="text-blue-50 text-base leading-relaxed max-w-xs mx-auto font-medium opacity-90">
-                                Plataforma integral para la gestión y transformación del aprendizaje universitario con tecnología de vanguardia.
+                            <h2 className="text-3xl font-bold text-white mb-4">Innovación Educativa</h2>
+                            <p className="text-blue-100 text-sm leading-relaxed max-w-xs mx-auto">
+                                Plataforma integral para la gestión y transformación del aprendizaje universitario.
                             </p>
                         </div>
-
-                        <div className="grid grid-cols-3 gap-4 pt-8 border-t border-white/10">
-                            <div className="text-white"><div className="text-xl font-bold">15K+</div><div className="text-[10px] uppercase opacity-60">Alumnos</div></div>
-                            <div className="text-white"><div className="text-xl font-bold">500+</div><div className="text-[10px] uppercase opacity-60">Recursos</div></div>
-                            <div className="text-white"><div className="text-xl font-bold">100%</div><div className="text-[10px] uppercase opacity-60">Digital</div></div>
+                        <div className="flex gap-5 justify-center mt-12 text-white text-base" aria-label="Redes institucionales">
+                            <span>●</span><span>●</span><span>●</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Panel Derecho */}
-                <div className="w-full lg:w-7/12 flex items-center justify-center bg-[#6699ff] p-8 lg:p-20 relative">
-                    <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl p-10 lg:p-12 transform hover:scale-[1.01] transition-transform duration-500">
-                        <div className="mb-10 text-center">
-                            <h1 className="text-4xl font-black text-gray-900 mb-3 tracking-tighter">Iniciar sesión</h1>
-                            <p className="text-gray-400 font-medium">Acceso exclusivo para la comunidad UPN.</p>
+                <div className="w-full lg:w-7/12 flex items-center justify-center bg-[#6699ff] p-8 lg:p-16">
+                    <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-10 transition-all duration-300 hover:shadow-lg">
+                        <div className="mb-8 text-center">
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Iniciar sesión</h1>
+                            <p className="text-gray-500 text-sm">Desbloquea tu mundo.</p>
                         </div>
 
                         <form onSubmit={handleLogin} className="space-y-6">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-3">Usuario institucional</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Usuario o correo institucional</label>
                                 <div className="relative group">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-600 transition-colors group-focus-within:text-blue-400">
                                         <span className="material-symbols-outlined text-2xl">mail</span>
@@ -142,8 +138,8 @@ const Login = () => {
                                     <input
                                         type="text"
                                         required
-                                        className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-semibold focus:ring-4 focus:ring-blue-500/10 focus:bg-white focus:border-blue-500 outline-none transition-all duration-300"
-                                        placeholder="usuario institucional"
+                                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200"
+                                        placeholder="nombre@upn.edu.co o usuario"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
@@ -151,7 +147,7 @@ const Login = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-3">Contraseña</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
                                 <div className="relative group">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-600 transition-colors group-focus-within:text-blue-400">
                                         <span className="material-symbols-outlined text-2xl">lock</span>
@@ -159,7 +155,7 @@ const Login = () => {
                                     <input
                                         type="password"
                                         required
-                                        className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-semibold focus:ring-4 focus:ring-blue-500/10 focus:bg-white focus:border-blue-500 outline-none transition-all duration-300"
+                                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200"
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
@@ -176,12 +172,12 @@ const Login = () => {
                                     </div>
                                     <span className="text-gray-500 text-sm font-semibold group-hover:text-gray-700 transition-colors">Recordarme</span>
                                 </label>
-                                <span className="text-slate-400 text-sm font-medium">Acceso institucional</span>
+                                <a href="#recuperar" className="text-blue-600 hover:text-blue-700 text-sm font-medium">¿Olvidaste tu contraseña?</a>
                             </div>
 
-                            <button className="w-full bg-[#1f57ff] hover:bg-[#1745d0] text-white font-black py-4 rounded-2xl shadow-xl shadow-blue-200 transform transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 text-lg mt-8">
-                                Ingresar
+                            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-3 text-sm mt-8">
                                 <span className="material-symbols-outlined font-bold">arrow_forward</span>
+                                Iniciar sesión
                             </button>
                         </form>
 
@@ -194,13 +190,12 @@ const Login = () => {
                             ) : (
                                 <p className="text-xs text-gray-400">El acceso con Google se habilitará al finalizar la configuración institucional.</p>
                             )}
-                            <p className="text-gray-400 text-sm font-medium">
-                                ¿Eres evaluador o administrador?
-                                <span className="text-blue-600 font-bold ml-2">Usa las credenciales asignadas.</span>
+                            <p className="text-gray-600 text-sm font-medium">
+                                ¿No tienes cuenta? <span className="text-blue-600 font-medium">Regístrate aquí</span>
                             </p>
                             <div className="h-px bg-gray-100 w-full"></div>
-                            <p className="text-[10px] text-gray-300 uppercase font-black tracking-widest px-8 leading-relaxed">
-                                Sistema de información académica UPN <br /> 2025 ®
+                            <p className="text-xs text-gray-400 leading-relaxed">
+                                © 2025 UPN EduTech. Plataforma de Innovación Educativa
                             </p>
                         </div>
                     </div>

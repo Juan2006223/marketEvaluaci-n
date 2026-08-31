@@ -14,7 +14,7 @@ const Admin = () => {
     const [formData, setFormData] = useState({
         title: '',
         price: '',
-        category: 'ia',
+        category_id: 1,
         image_url: '',
         short_description: '',
         description: '',
@@ -26,7 +26,7 @@ const Admin = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         const token = localStorage.getItem('access_token');
-        if (!user || user.role !== 'admin' || !token) {
+        if (!user || !(user.rol === 'admin' || user.is_staff || user.is_superuser) || !token) {
             navigate('/login');
         }
         fetchProducts();
@@ -34,8 +34,8 @@ const Admin = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await api.get('products/');
-            setProducts(response.data);
+            const response = await api.get('productos/', { params: { all: 'true', page_size: 100 } });
+            setProducts(Array.isArray(response.data) ? response.data : response.data.results || []);
         } catch (error) {
             console.error('Error fetching products:', error);
         } finally {
@@ -59,7 +59,7 @@ const Admin = () => {
 
         if (result.isConfirmed) {
             try {
-                await api.delete(`products/${id}/`);
+                await api.delete(`productos/${id}/`);
                 setProducts(products.filter(p => p.id !== id));
                 Swal.fire({
                     title: 'Eliminado',
@@ -81,7 +81,7 @@ const Admin = () => {
             setFormData({
                 title: product.title,
                 price: Math.floor(product.price),
-                category: product.category || 'ia', // Use product.category (slug)
+                category_id: product.category_id || 1,
                 image_url: product.image_url || '',
                 short_description: product.short_description || '',
                 description: product.description || '',
@@ -92,7 +92,7 @@ const Admin = () => {
             setFormData({
                 title: '',
                 price: '',
-                category: 'ia',
+                category_id: 1,
                 image_url: '',
                 short_description: '',
                 description: '',
@@ -106,9 +106,9 @@ const Admin = () => {
         e.preventDefault();
         try {
             if (editingProduct) {
-                await api.put(`products/${editingProduct.id}/`, formData);
+                await api.put(`productos/${editingProduct.id}/`, formData);
             } else {
-                await api.post('products/', formData);
+                await api.post('productos/', formData);
             }
 
             Swal.fire({
@@ -280,10 +280,10 @@ const Admin = () => {
                                         </td>
                                         <td className="py-4 px-2">
                                             <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-gray-600 uppercase">
-                                                {p.category_name}
+                                                {p.category_name || 'Sin categoría'}
                                             </span>
                                         </td>
-                                        <td className="py-4 px-2 font-black text-[#1f57ff]">{Math.floor(p.price)} <span className="text-[10px]">TKNS</span></td>
+                                        <td className="py-4 px-2 font-black text-[#1f57ff]">{Math.floor(p.price || 0)} <span className="text-[10px]">TKNS</span></td>
                                         <td className="py-4 px-2">
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${p.section === 'destacadas' ? 'bg-amber-100 text-amber-700' :
                                                 p.section === 'mes' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
@@ -358,13 +358,13 @@ const Admin = () => {
                                 <label className="text-sm font-bold text-gray-700">Categoría</label>
                                 <select
                                     className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-blue-500 font-medium"
-                                    value={formData.category}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                    value={formData.category_id}
+                                    onChange={(e) => setFormData({ ...formData, category_id: Number(e.target.value) })}
                                 >
-                                    <option value="ia">IA</option>
-                                    <option value="apps">Apps</option>
-                                    <option value="vr">VR</option>
-                                    <option value="gamificacion">Gamificación</option>
+                                    <option value="1">IA y Analítica</option>
+                                    <option value="2">Gamificación</option>
+                                    <option value="3">Realidad virtual</option>
+                                    <option value="4">Aplicaciones educativas</option>
                                 </select>
                             </div>
 
