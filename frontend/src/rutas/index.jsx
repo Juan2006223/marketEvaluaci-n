@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { RutaProtegida } from './RutaProtegida';
-import Inicio from '../features/productos/presentacion/paginas/Inicio';
-import DetalleRecurso from '../features/productos/presentacion/paginas/DetalleRecurso';
+import Inicio from '../pages/Home';
+import DetalleRecurso from '../pages/ProductDetail';
 import Login from '../features/auth/presentacion/paginas/Login';
 import RecursosInteres from '../features/interes/presentacion/paginas/RecursosInteres';
 import PanelAdmin from '../features/admin/presentacion/paginas/PanelAdmin';

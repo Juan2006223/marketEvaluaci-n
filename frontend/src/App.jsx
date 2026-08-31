@@ -1,11 +1,11 @@
 import React from 'react';
 import Rutas from './rutas/index';
-import Navbar from './shared/componentes/Navbar';
-import Footer from './shared/componentes/Footer';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans">
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800 font-sans">
       <Navbar />
       <main className="flex-grow">
         <Rutas />

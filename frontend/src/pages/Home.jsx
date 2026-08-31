@@ -1,26 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import api from '../api';
+import { useProductos } from '../features/productos/presentacion/hooks/useProductos';
 import ProductCard from '../components/ProductCard';
 
 const Home = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { productos: products, cargando: loading } = useProductos();
     const [monthCategory, setMonthCategory] = useState('all');
     const carouselRef = useRef(null);
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await api.get('products/');
-                setProducts(response.data);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchProducts();
-    }, []);
 
     useEffect(() => {
         if (!loading) {
