@@ -8,6 +8,7 @@ import RecursosInteres from '../features/interes/presentacion/paginas/RecursosIn
 import PanelAdmin from '../features/admin/presentacion/paginas/PanelAdmin';
 import Cart from '../pages/Cart';
 import MisCursos from '../pages/MisCursos';
+import CursoPendiente from '../pages/CursoPendiente';
 
 export default function Rutas() {
   return (
@@ -20,6 +21,7 @@ export default function Rutas() {
       <Route path="/guardados" element={<RecursosInteres />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/mis-cursos" element={<MisCursos />} />
+      <Route path="/curso/:id" element={<CursoPendiente />} />
       
       <Route path="/login" element={<Login />} />
       <Route

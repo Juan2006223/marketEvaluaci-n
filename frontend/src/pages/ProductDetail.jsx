@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api';
 import { useInteresContext } from '../shared/estado/useInteresContext';
+import { BookOpen, GraduationCap, Lightbulb, Monitor } from 'lucide-react';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -134,11 +135,11 @@ const ProductDetail = () => {
             {/* Características y detalles */}
             <div className="mt-12 border-t border-gray-200 pt-8 max-w-4xl">
                 <h2 className="text-2xl font-bold mb-4 text-gray-900">Descripción y posibilidades de uso</h2>
-                <ul className="space-y-2 text-gray-700">
-                    <li>📘 {product.description || 'Recurso orientado al fortalecimiento de procesos educativos.'}</li>
-                    <li>🧠 Puede incorporarse a iniciativas de innovación pedagógica y tecnológica.</li>
-                    <li>💻 Consulte sus condiciones de acceso y compatibilidad antes de su implementación.</li>
-                    <li>🎓 El CINNDET acompaña la apropiación institucional cuando corresponda.</li>
+                <ul className="space-y-3 text-gray-700">
+                    <li className="flex gap-3"><BookOpen size={19} className="text-blue-600 shrink-0 mt-0.5" strokeWidth={1.8} /><span>{product.description || 'Recurso orientado al fortalecimiento de procesos educativos.'}</span></li>
+                    <li className="flex gap-3"><Lightbulb size={19} className="text-blue-600 shrink-0 mt-0.5" strokeWidth={1.8} /><span>Puede incorporarse a iniciativas de innovación pedagógica y tecnológica.</span></li>
+                    <li className="flex gap-3"><Monitor size={19} className="text-blue-600 shrink-0 mt-0.5" strokeWidth={1.8} /><span>Consulte sus condiciones de acceso y compatibilidad antes de su implementación.</span></li>
+                    <li className="flex gap-3"><GraduationCap size={19} className="text-blue-600 shrink-0 mt-0.5" strokeWidth={1.8} /><span>El CINNDET acompaña la apropiación institucional cuando corresponda.</span></li>
                 </ul>
             </div>
         </main>

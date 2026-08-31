@@ -34,7 +34,7 @@ export default function MisCursos() {
                     <div className="flex justify-between text-xs font-bold text-slate-500 mb-2"><span>Progreso</span><span>{curso.progreso || 0}%</span></div>
                     <div className="h-2 rounded-full bg-slate-100 overflow-hidden"><div className="h-full bg-blue-600" style={{ width: `${curso.progreso || 0}%` }} /></div>
                   </div>
-                  <Link to={`/product/${curso.id}`} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-800">
+              <Link to={`/curso/${curso.id}`} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-800">
                     <PlayCircle size={18} /> Continuar curso
                   </Link>
                 </div>
