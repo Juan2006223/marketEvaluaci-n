@@ -36,6 +36,15 @@ const ProductDetail = () => {
     // artificiales: cuando se incorporen más imágenes, se pueden añadir a este arreglo.
     const images = [product.image || product.image_url].filter(Boolean);
     const estaEnLista = estaGuardado(product.id);
+    const agregarAlCarrito = () => {
+        const carrito = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existe = carrito.find((item) => item.id === product.id);
+        const nuevo = existe
+            ? carrito.map((item) => item.id === product.id ? { ...item, qty: (item.qty || 1) + 1 } : item)
+            : [...carrito, { ...product, qty: 1 }];
+        localStorage.setItem('cart', JSON.stringify(nuevo));
+        window.dispatchEvent(new Event('storage'));
+    };
 
     return (
         <main className="container mx-auto px-6 lg:px-12 py-10">
@@ -92,8 +101,11 @@ const ProductDetail = () => {
                     <p className="text-sm text-green-600 font-semibold mb-6">✓ Disponible</p>
 
                     <div className="flex flex-col gap-3 mb-8">
-                        {product.external_url && <a href={product.external_url} target="_blank" rel="noopener noreferrer" className="bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold transition shadow-md text-center">
-                            Acceder al recurso
+                        <button onClick={agregarAlCarrito} className="bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold transition shadow-md text-center">
+                            Añadir al carrito
+                        </button>
+                        {product.external_url && <a href={product.external_url} target="_blank" rel="noopener noreferrer" className="text-center text-sm font-bold text-blue-700 hover:underline py-1">
+                            Ver información en la UPN
                         </a>}
                         <button
                             onClick={() => toggleInteres(product)}

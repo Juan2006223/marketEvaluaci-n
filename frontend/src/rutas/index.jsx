@@ -6,6 +6,8 @@ import DetalleRecurso from '../pages/ProductDetail';
 import Login from '../features/auth/presentacion/paginas/Login';
 import RecursosInteres from '../features/interes/presentacion/paginas/RecursosInteres';
 import PanelAdmin from '../features/admin/presentacion/paginas/PanelAdmin';
+import Cart from '../pages/Cart';
+import MisCursos from '../pages/MisCursos';
 
 export default function Rutas() {
   return (
@@ -16,8 +18,8 @@ export default function Rutas() {
       <Route path="/product/:id" element={<DetalleRecurso />} />
       
       <Route path="/guardados" element={<RecursosInteres />} />
-      {/* Retrocompatibilidad con ruta anterior de carrito */}
-      <Route path="/cart" element={<RecursosInteres />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/mis-cursos" element={<MisCursos />} />
       
       <Route path="/login" element={<Login />} />
       <Route

@@ -64,14 +64,20 @@ const Cart = () => {
 
         Swal.fire({
             title: '¡Compra exitosa!',
-            text: 'Se han canjeado tus tokens por los recursos educativos.',
+            text: 'Tus cursos ya están disponibles en Mis cursos.',
             icon: 'success',
             confirmButtonColor: '#10b981'
         }).then(() => {
+            const cursos = JSON.parse(localStorage.getItem('my_courses') || '[]');
+            const nuevosCursos = [...cursos];
+            items.forEach((item) => {
+                if (!nuevosCursos.some((curso) => curso.id === item.id)) nuevosCursos.push({ ...item, progreso: 0 });
+            });
+            localStorage.setItem('my_courses', JSON.stringify(nuevosCursos));
             setItems([]);
             localStorage.setItem('cart', '[]');
             window.dispatchEvent(new Event('storage'));
-            navigate('/');
+            navigate('/mis-cursos');
         });
     };
 

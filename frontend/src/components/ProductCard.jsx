@@ -23,6 +23,18 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
         });
     };
 
+    const agregarAlCarrito = (e) => {
+        e.preventDefault();
+        const carrito = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existe = carrito.find((item) => item.id === product.id);
+        const nuevo = existe
+            ? carrito.map((item) => item.id === product.id ? { ...item, qty: (item.qty || 1) + 1 } : item)
+            : [...carrito, { ...product, qty: 1 }];
+        localStorage.setItem('cart', JSON.stringify(nuevo));
+        window.dispatchEvent(new Event('storage'));
+        Swal.fire({ toast: true, position: 'bottom-end', icon: 'success', title: 'Curso añadido al carrito', showConfirmButton: false, timer: 1500, background: '#1f57ff', color: '#fff', iconColor: '#fff' });
+    };
+
     const delay = (index + 1) * 100;
 
     if (isDestacada) {
@@ -47,14 +59,14 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
                     <h3 className={`${isRowSpan ? 'text-3xl' : 'text-xl'} font-bold mb-2`}>{product.title}</h3>
                     <p className="text-sm mb-4 opacity-90 line-clamp-2">{product.short_description || product.description}</p>
                     <div className="flex gap-3">
-                        <button className={`${(product.category_slug === 'ia' || product.category_slug === 'vr') ? 'bg-yellow-400 text-black' : 'bg-[#1f57ff] text-white'} px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider shadow-lg transition-transform hover:scale-105`}>
-                            Ver recurso
-                        </button>
+                        <Link to={`/product/${product.id}`} className={`${(product.category_slug === 'ia' || product.category_slug === 'vr') ? 'bg-yellow-400 text-black' : 'bg-[#1f57ff] text-white'} px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider shadow-lg transition-transform hover:scale-105`}>
+                            Ver curso
+                        </Link>
                         <button
-                            onClick={guardarRecurso}
+                            onClick={agregarAlCarrito}
                             className="bg-white/20 backdrop-blur text-white px-5 py-2 rounded-xl transition duration-300 hover:bg-white/30 border border-white/20"
                         >
-                            <span className="material-symbols-outlined">bookmark_add</span>
+                            <span className="material-symbols-outlined">shopping_cart</span>
                         </button>
                     </div>
                 </div>
@@ -81,11 +93,11 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
                     <div className="flex justify-between items-center pt-2 border-t border-gray-50">
                         <span className="text-blue-600 font-black text-sm">{product.category_name || 'Recurso educativo'}</span>
                         <button
-                            onClick={guardarRecurso}
+                            onClick={agregarAlCarrito}
                             className="bg-[#1f57ff] hover:bg-[#1745d0] text-white rounded-xl px-4 py-2 flex items-center gap-2 transition-all shadow-md shadow-blue-100"
                         >
-                            <span className="material-symbols-outlined text-sm font-bold">bookmark_add</span>
-                            <span className="text-xs font-bold font-sans">GUARDAR</span>
+                            <span className="material-symbols-outlined text-sm font-bold">shopping_cart</span>
+                            <span className="text-xs font-bold font-sans">AÑADIR</span>
                         </button>
                     </div>
                 </div>
@@ -110,7 +122,7 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
                 <span className="badge-pulse absolute top-4 left-4 bg-blue-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full z-20 uppercase tracking-widest shadow-lg">
                     {product.category_name}
                 </span>
-                <button className="like-btn absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full p-2.5 z-20 transition hover:scale-110 shadow-lg text-red-500">
+                <button onClick={(e) => guardarRecurso(e)} aria-label="Guardar en favoritos" className="like-btn absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full p-2.5 z-20 transition hover:scale-110 shadow-lg text-red-500">
                     <span className="material-symbols-outlined font-variation-settings-fill-1 text-[20px]">favorite</span>
                 </button>
             </div>
@@ -123,10 +135,10 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
                         <span className="text-sm font-black text-[#1f57ff]">Consulta institucional</span>
                     </div>
                     <button
-                        onClick={guardarRecurso}
+                        onClick={agregarAlCarrito}
                         className="bg-[#1f57ff] hover:bg-[#1745d0] text-white p-3.5 rounded-2xl flex items-center justify-center transition-all shadow-xl shadow-blue-100 active:scale-95"
                     >
-                        <span className="material-symbols-outlined text-xl font-bold">bookmark_add</span>
+                        <span className="material-symbols-outlined text-xl font-bold">shopping_cart</span>
                     </button>
                 </div>
             </div>

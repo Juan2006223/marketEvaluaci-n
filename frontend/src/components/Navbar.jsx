@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useInteresContext } from '../shared/estado/useInteresContext';
 
 const Navbar = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('todo');
+    const [cartCount, setCartCount] = useState(0);
     const navigate = useNavigate();
-    const { cantidad } = useInteresContext();
 
     React.useEffect(() => {
-        const savedUser = JSON.parse(localStorage.getItem('user') || 'null');
-        setUser(savedUser);
+        const actualizar = () => {
+            setUser(JSON.parse(localStorage.getItem('user') || 'null'));
+            setCartCount(JSON.parse(localStorage.getItem('cart') || '[]').reduce((total, item) => total + (item.qty || 1), 0));
+        };
+        actualizar();
+        window.addEventListener('storage', actualizar);
+        return () => window.removeEventListener('storage', actualizar);
     }, []);
 
     const buscar = (event) => {
@@ -66,12 +70,15 @@ const Navbar = () => {
 
                 {/* Panel derecho */}
                 <div className="flex items-center gap-6">
-                    {/* Recursos guardados */}
-                    <Link to="/guardados" className="relative hover:text-blue-600 transition" title="Recursos guardados">
-                        <span className="material-symbols-outlined text-2xl text-gray-700">bookmark</span>
+                    <Link to="/guardados" className="hover:text-blue-600 transition" title="Mis favoritos">
+                        <span className="material-symbols-outlined text-2xl text-gray-700">favorite</span>
+                    </Link>
+                    {/* Carrito de cursos */}
+                    <Link to="/cart" className="relative hover:text-blue-600 transition" title="Carrito de cursos">
+                        <span className="material-symbols-outlined text-2xl text-gray-700">shopping_cart</span>
                         <span id="cart-count"
                             className="absolute -top-1 -right-2 bg-yellow-400 text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                            {cantidad}
+                            {cartCount}
                         </span>
                     </Link>
 
@@ -105,6 +112,9 @@ const Navbar = () => {
                                             Panel administrativo
                                         </Link>
                                     )}
+                                    <Link to="/mis-cursos" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700" onClick={() => setUserMenuOpen(false)}>
+                                        Mis cursos
+                                    </Link>
                                     <button
                                         className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-xl font-bold transition-colors"
                                         onClick={handleLogout}>

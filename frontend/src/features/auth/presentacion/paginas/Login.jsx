@@ -31,7 +31,7 @@ export default function Login() {
         if (sesion.rol === 'admin' || sesion.is_staff) {
           navigate('/admin');
         } else {
-          navigate('/');
+          navigate('/mis-cursos');
         }
       }, 1500);
     } catch (error) {

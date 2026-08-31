@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useProductos } from '../features/productos/presentacion/hooks/useProductos';
 import ProductCard from '../components/ProductCard';
 
 const Home = () => {
     const { productos: products, cargando: loading } = useProductos();
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [monthCategory, setMonthCategory] = useState('all');
     const carouselRef = useRef(null);
 
@@ -107,7 +108,7 @@ const Home = () => {
 
                     <div className="relative hidden md:block">
                         <div className="grid grid-cols-2 gap-6">
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 scroll-reveal scale-in delay-200">
+                            <button onClick={() => navigate('/?categoria=vr#recursos')} className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 scroll-reveal scale-in delay-200 text-left cursor-pointer">
                                 <img src="https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?w=400&h=500&fit=crop" className="w-full h-80 object-cover" alt="VR" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-blue-600/80 to-transparent"></div>
                                 <div className="absolute bottom-6 left-6 right-6 text-white">
@@ -116,25 +117,25 @@ const Home = () => {
                                         <span className="text-sm font-semibold">Realidad Virtual</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 mt-12 scroll-reveal scale-in delay-300">
+                            </button>
+                            <button onClick={() => navigate('/?categoria=ia#recursos')} className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 mt-12 scroll-reveal scale-in delay-300 text-left cursor-pointer">
                                 <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop" className="w-full h-56 object-cover" alt="AI" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-purple-600/80 to-transparent"></div>
                                 <div className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg">
                                     <span className="material-symbols-outlined text-purple-600 text-xl font-bold">psychology</span>
                                 </div>
-                            </div>
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 -mt-6 scroll-reveal scale-in delay-400">
+                            </button>
+                            <button onClick={() => navigate('/?categoria=apps#recursos')} className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 -mt-6 scroll-reveal scale-in delay-400 text-left cursor-pointer">
                                 <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=400&fit=crop" className="w-full h-72 object-cover" alt="Apps" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-green-600/80 to-transparent"></div>
                                 <div className="absolute bottom-6 left-6 bg-white/20 backdrop-blur-lg rounded-2xl p-3 border border-white/30 text-white font-bold text-xs flex items-center gap-2">
                                     <span className="material-symbols-outlined text-base">devices</span> Apps Educativas
                                 </div>
-                            </div>
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 scroll-reveal scale-in delay-500">
+                            </button>
+                            <button onClick={() => navigate('/?categoria=gamificacion#recursos')} className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 scroll-reveal scale-in delay-500 text-left cursor-pointer">
                                 <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop" className="w-full h-56 object-cover" alt="Gamification" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-orange-600/80 to-transparent"></div>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
