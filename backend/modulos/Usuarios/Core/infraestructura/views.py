@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.http import Http404
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -95,6 +96,30 @@ class GoogleLoginView(APIView):
                 "rol": "admin" if (user.is_staff or user.is_superuser) else "usuario",
             },
         }, status=status.HTTP_200_OK)
+
+
+class EvaluatorBootstrapView(APIView):
+    """Alta única de evaluador; queda deshabilitada sin token de entorno."""
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        token = getattr(settings, "EVALUATOR_BOOTSTRAP_TOKEN", "")
+        if not token or request.headers.get("X-Bootstrap-Token") != token:
+            raise Http404
+
+        username = request.data.get("username", "").strip()
+        email = request.data.get("email", "").strip().lower()
+        password = request.data.get("password", "")
+        if not username or not email or len(password) < 12:
+            return Response({"error": "Datos de evaluador inválidos."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user, _ = User.objects.get_or_create(username=username, defaults={"email": email})
+        user.email = email
+        user.is_staff = True
+        user.is_superuser = True
+        user.set_password(password)
+        user.save()
+        return Response({"detail": "Cuenta evaluadora creada."}, status=status.HTTP_201_CREATED)
 
 
 class UsuarioMeView(APIView):
