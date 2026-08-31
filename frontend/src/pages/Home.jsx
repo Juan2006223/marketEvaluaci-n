@@ -187,7 +187,7 @@ const Home = () => {
 
                     <div ref={carouselRef} id="month-products-carousel" className="flex gap-8 overflow-x-auto scrollbar-hide scroll-smooth pb-8 px-4 -mx-4">
                         {mes.length > 0 ? mes.map((p, idx) => (
-                            <div key={p.id} className="min-w-[360px] snap-start scroll-reveal scale-in">
+                            <div key={p.id} className="min-w-[360px] snap-start">
                                 <ProductCard product={p} index={idx} />
                             </div>
                         )) : (
@@ -206,7 +206,7 @@ const Home = () => {
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {(recomendadas.length ? recomendadas : catalogo.slice(0, 4)).map((p, idx) => (
-                            <div key={p.id} className="scroll-reveal fade-up">
+                            <div key={p.id}>
                                 <ProductCard product={p} index={idx} isRecomendada={true} />
                             </div>
                         ))}
