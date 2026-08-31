@@ -1,49 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import api from '../api';
+import { useAuth } from '../features/auth/presentacion/hooks/useAuth';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { iniciarSesion } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
         try {
-            // DRF Simple JWT espera 'username' por defecto. 
-            // Usaremos el email como username para simplificar.
-            const response = await api.post('token/', {
-                username: email,
-                password: password
-            });
-
-            const { access, refresh } = response.data;
-
-            localStorage.setItem('access_token', access);
-            localStorage.setItem('refresh_token', refresh);
-
-            // Decodificar info básica del usuario (opcional si el backend devuelve más)
-            const userSession = {
-                name: email.split('@')[0],
-                role: email === 'admin@upn.edu.co' ? 'admin' : 'user',
-                email
-            };
-            localStorage.setItem("user", JSON.stringify(userSession));
-            window.dispatchEvent(new Event('storage'));
+            const userSession = await iniciarSesion(email, password);
 
             Swal.fire({
                 icon: 'success',
-                title: `¡Bienvenido ${userSession.name}!`,
+                title: `¡Bienvenido ${userSession.nombre || userSession.username}!`,
                 showConfirmButton: false,
                 timer: 1500,
                 position: 'center'
             });
 
             setTimeout(() => {
-                if (userSession.role === 'admin') navigate('/admin');
-                else navigate('/');
+                if (userSession.rol === 'admin' || userSession.is_staff) navigate('/admin');
+                else navigate('/mis-cursos');
             }, 1500);
 
         } catch (error) {

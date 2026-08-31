@@ -207,7 +207,7 @@ const Home = () => {
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {(recomendadas.length ? recomendadas : catalogo.slice(0, 4)).map((p, idx) => (
-                            <div key={p.id}>
+                            <div key={p.id} className="h-full">
                                 <ProductCard product={p} index={idx} isRecomendada={true} />
                             </div>
                         ))}
