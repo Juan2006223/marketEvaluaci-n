@@ -2,8 +2,10 @@ node_modules/
 dist/
 .env*
 .DS_Store
+~$*.docx
 *.local
 venv/
+.venv/
 __pycache__/
 db.sqlite3
 media/

@@ -35,7 +35,7 @@ api.interceptors.response.use(
           localStorage.setItem('access_token', response.data.access);
           api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
           return api(originalRequest);
-        } catch (refreshError) {
+        } catch {
           // Si el refresh falla, redirigir al login
           localStorage.clear();
           window.location.href = '/login';

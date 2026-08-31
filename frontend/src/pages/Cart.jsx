@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const Cart = () => {
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState(() => JSON.parse(localStorage.getItem('cart') || '[]'));
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        setItems(cart);
-    }, []);
 
     const updateQty = (id, delta) => {
         const newItems = items.map(item => {
