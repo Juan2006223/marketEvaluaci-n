@@ -63,7 +63,7 @@ const Home = () => {
     const mesOriginal = catalogo.filter(p => p.section === 'mes');
     const mes = (mesOriginal.length ? mesOriginal : catalogo).filter(p => monthCategory === 'all' || p.category_slug === monthCategory);
     const recomendadas = catalogo.filter(p => p.section === 'recomendadas');
-    const seccionesAdicionales = sections.filter(s => !['destacadas', 'mes', 'recomendadas', 'general'].includes(s.slug));
+    const seccionesAdicionales = sections.filter(s => !['destacadas', 'mes', 'recomendadas'].includes(s.slug));
 
     return (
         <div className="bg-gray-50">
