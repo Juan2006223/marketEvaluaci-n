@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useAuth } from '../features/auth/presentacion/hooks/useAuth';
@@ -7,7 +7,38 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const { iniciarSesion } = useAuth();
+    const { iniciarSesion, iniciarSesionGoogle } = useAuth();
+    const googleButtonRef = useRef(null);
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    useEffect(() => {
+        if (!googleClientId || !googleButtonRef.current) return undefined;
+        const cargarBoton = () => {
+            window.google.accounts.id.initialize({
+                client_id: googleClientId,
+                callback: async ({ credential }) => {
+                    try {
+                        const sesion = await iniciarSesionGoogle(credential);
+                        Swal.fire({ icon: 'success', title: `¡Bienvenido ${sesion.nombre || sesion.username}!`, timer: 1200, showConfirmButton: false });
+                        setTimeout(() => navigate(sesion.is_staff ? '/admin' : '/mis-cursos'), 1200);
+                    } catch (error) {
+                        Swal.fire({ icon: 'error', title: 'No fue posible ingresar con Google', text: error.response?.data?.error || 'Inténtalo de nuevo.', confirmButtonColor: '#2563eb' });
+                    }
+                },
+            });
+            window.google.accounts.id.renderButton(googleButtonRef.current, { theme: 'outline', size: 'large', text: 'continue_with', width: 390 });
+        };
+        if (window.google?.accounts?.id) cargarBoton();
+        else {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.onload = cargarBoton;
+            document.head.appendChild(script);
+            return () => script.remove();
+        }
+        return undefined;
+    }, [googleClientId, iniciarSesionGoogle, navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -155,6 +186,14 @@ const Login = () => {
                         </form>
 
                         <div className="mt-10 text-center space-y-4">
+                            {googleClientId ? (
+                                <>
+                                    <div className="relative"><div className="absolute inset-0 flex items-center items-center"><div className="w-full border-t border-gray-100" /></div><span className="relative bg-white px-3 text-xs text-gray-400">o continúa con</span></div>
+                                    <div ref={googleButtonRef} className="flex justify-center" />
+                                </>
+                            ) : (
+                                <p className="text-xs text-gray-400">El acceso con Google se habilitará al finalizar la configuración institucional.</p>
+                            )}
                             <p className="text-gray-400 text-sm font-medium">
                                 ¿Aún no tienes cuenta institucional?
                                 <a href="#" className="text-blue-600 font-bold ml-2 hover:underline">Regístrate</a>

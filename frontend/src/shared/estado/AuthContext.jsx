@@ -68,6 +68,26 @@ export function AuthProvider({ children }) {
     return sesion;
   }, []);
 
+  const iniciarSesionGoogle = useCallback(async (credential) => {
+    const { data } = await clienteHttp.post('auth/google/', { credential });
+    tokenStorage.guardarAccessToken(data.access);
+    tokenStorage.guardarRefreshToken(data.refresh);
+    const meData = data.user;
+    const sesion = {
+      id: meData.id,
+      nombre: meData.first_name ? `${meData.first_name} ${meData.last_name}`.trim() : meData.username,
+      username: meData.username,
+      email: meData.email,
+      is_staff: Boolean(meData.is_staff),
+      is_superuser: Boolean(meData.is_superuser),
+      rol: meData.rol || 'usuario',
+    };
+    tokenStorage.guardarUsuario(sesion);
+    setUsuario(sesion);
+    window.dispatchEvent(new Event('storage'));
+    return sesion;
+  }, []);
+
   const cerrarSesion = useCallback(() => {
     tokenStorage.limpiar();
     setUsuario(null);
@@ -77,7 +97,7 @@ export function AuthProvider({ children }) {
   const esAdmin = Boolean(usuario?.is_staff || usuario?.is_superuser || usuario?.rol === 'admin');
 
   return (
-    <AuthContext.Provider value={{ usuario, iniciarSesion, cerrarSesion, esAdmin, cargandoSesion }}>
+    <AuthContext.Provider value={{ usuario, iniciarSesion, iniciarSesionGoogle, cerrarSesion, esAdmin, cargandoSesion }}>
       {children}
     </AuthContext.Provider>
   );

@@ -27,6 +27,7 @@ except ImportError:
 # -----------------------------------------------------------------------------
 DEBUG_ENV = os.environ.get("DEBUG", "True").strip().lower()
 DEBUG = DEBUG_ENV in ("true", "1", "yes")
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "").strip()
 IS_TEST_RUN = "test" in sys.argv
 
 # Validar SECRET_KEY
