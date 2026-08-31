@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../shared/estado/useAuthContext';
 
 const Navbar = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
-    const [user, setUser] = useState(null);
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('todo');
     const [cartCount, setCartCount] = useState(0);
     const navigate = useNavigate();
+    const { usuario, cerrarSesion, esAdmin } = useAuthContext();
 
     React.useEffect(() => {
         const actualizar = () => {
-            setUser(JSON.parse(localStorage.getItem('user') || 'null'));
             setCartCount(JSON.parse(localStorage.getItem('cart') || '[]').reduce((total, item) => total + (item.qty || 1), 0));
         };
         actualizar();
@@ -28,12 +28,9 @@ const Navbar = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        setUser(null);
-        window.dispatchEvent(new Event('storage'));
+        cerrarSesion();
         setUserMenuOpen(false);
+        navigate('/');
     };
 
     return (
@@ -99,13 +96,13 @@ const Navbar = () => {
                         {/* Menú desplegable */}
                         <div id="user-menu"
                             className={`absolute right-0 mt-3 w-48 bg-white border border-gray-100 rounded-xl shadow-lg transform transition-all duration-200 origin-top-right ${userMenuOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
-                            {user ? (
+                            {usuario ? (
                                 <>
                                     <div className="px-4 py-3 border-b border-gray-50">
                                         <p className="text-xs font-black text-gray-400 uppercase tracking-widest mt-1">Sesión activa</p>
-                                        <p className="text-sm font-bold text-blue-600 truncate">{user.name}</p>
+                                        <p className="text-sm font-bold text-blue-600 truncate">{usuario.nombre || usuario.username}</p>
                                     </div>
-                                    {user.role === 'admin' && (
+                                    {esAdmin && (
                                         <Link to="/admin"
                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
                                             onClick={() => setUserMenuOpen(false)}>
