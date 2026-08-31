@@ -134,16 +134,16 @@ const Login = () => {
 
                         <form onSubmit={handleLogin} className="space-y-6">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-3">Correo institucional</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-3">Usuario institucional</label>
                                 <div className="relative group">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-600 transition-colors group-focus-within:text-blue-400">
                                         <span className="material-symbols-outlined text-2xl">mail</span>
                                     </span>
                                     <input
-                                        type="email"
+                                        type="text"
                                         required
                                         className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-semibold focus:ring-4 focus:ring-blue-500/10 focus:bg-white focus:border-blue-500 outline-none transition-all duration-300"
-                                        placeholder="nombre@upn.edu.co"
+                                        placeholder="usuario institucional"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
