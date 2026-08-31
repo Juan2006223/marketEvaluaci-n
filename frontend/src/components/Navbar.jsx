@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../shared/estado/useAuthContext';
 import { useInteresContext } from '../shared/estado/useInteresContext';
+import { clienteHttp } from '../shared/api/clienteHttp';
 
 const Navbar = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('todo');
+    const [categories, setCategories] = useState([]);
     const [cartCount, setCartCount] = useState(0);
     const navigate = useNavigate();
     const { usuario, cerrarSesion, esAdmin } = useAuthContext();
@@ -19,6 +21,12 @@ const Navbar = () => {
         actualizar();
         window.addEventListener('storage', actualizar);
         return () => window.removeEventListener('storage', actualizar);
+    }, []);
+
+    React.useEffect(() => {
+        clienteHttp.get('categorias/')
+            .then(({ data }) => setCategories((Array.isArray(data) ? data : data.results || []).filter(c => c.is_active)))
+            .catch(() => setCategories([]));
     }, []);
 
     const buscar = (event) => {
@@ -53,10 +61,7 @@ const Navbar = () => {
                     <form onSubmit={buscar} className="flex w-full bg-gray-50 border rounded-full overflow-hidden shadow-inner">
                         <select value={category} onChange={(e) => setCategory(e.target.value)} id="category-select" aria-label="Categoría" className="bg-gray-100 px-4 text-sm outline-none border-r min-w-[160px]">
                             <option value="todo">Todas</option>
-                            <option value="ia">IA</option>
-                            <option value="gamificacion">Gamificación</option>
-                            <option value="vr">VR</option>
-                            <option value="apps">Apps</option>
+                            {categories.map(c => <option key={c.id} value={c.slug}>{c.name}</option>)}
                         </select>
                         <input value={search} onChange={(e) => setSearch(e.target.value)} id="search-input" type="search" placeholder="Buscar recursos..."
                             className="w-full px-4 py-2 text-sm outline-none bg-gray-50" />
