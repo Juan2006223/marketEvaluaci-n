@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useProductos } from '../features/productos/presentacion/hooks/useProductos';
 import ProductCard from '../components/ProductCard';
 
 const Home = () => {
     const { productos: products, cargando: loading } = useProductos();
+    const [searchParams] = useSearchParams();
     const [monthCategory, setMonthCategory] = useState('all');
     const carouselRef = useRef(null);
 
@@ -39,9 +41,17 @@ const Home = () => {
         }
     };
 
-    const destacadas = products.filter(p => p.section === 'destacadas');
-    const mes = products.filter(p => p.section === 'mes' && (monthCategory === 'all' || p.category_slug === monthCategory));
-    const recomendadas = products.filter(p => p.section === 'recomendadas');
+    const searchText = (searchParams.get('buscar') || '').toLocaleLowerCase('es-CO');
+    const selectedCategory = searchParams.get('categoria') || 'todo';
+    const coincideBusqueda = (p) => {
+        const texto = `${p.title} ${p.short_description} ${p.description} ${p.category_name}`.toLocaleLowerCase('es-CO');
+        return (!searchText || texto.includes(searchText)) && (selectedCategory === 'todo' || p.category_slug === selectedCategory);
+    };
+    const catalogo = products.filter(coincideBusqueda);
+    const destacadas = catalogo.filter(p => p.section === 'destacadas');
+    const mesOriginal = catalogo.filter(p => p.section === 'mes');
+    const mes = (mesOriginal.length ? mesOriginal : catalogo).filter(p => monthCategory === 'all' || p.category_slug === monthCategory);
+    const recomendadas = catalogo.filter(p => p.section === 'recomendadas');
 
     return (
         <div className="bg-gray-50">
@@ -131,14 +141,14 @@ const Home = () => {
             </section>
 
             {/* ================= PRODUCTOS DESTACADAS ================= */}
-            <section className="py-20 px-6 bg-white">
+            <section id="recursos" className="py-20 px-6 bg-white">
                 <div className="container mx-auto">
                     <div className="text-center max-w-3xl mx-auto mb-16">
                         <h2 className="text-4xl font-black mb-4 scroll-reveal fade-up">Soluciones Destacadas</h2>
                         <p className="text-gray-500 scroll-reveal fade-up delay-100">Las herramientas más potentes para transformar tu metodología de enseñanza.</p>
                     </div>
                     <div id="products-grid" className="grid md:grid-cols-3 gap-8 auto-rows-[300px]">
-                        {destacadas.map((p, idx) => (
+                        {(destacadas.length ? destacadas : catalogo.slice(0, 3)).map((p, idx) => (
                             <ProductCard key={p.id} product={p} index={idx} isDestacada={true} />
                         ))}
                     </div>
@@ -195,7 +205,7 @@ const Home = () => {
                         <p className="text-gray-500 scroll-reveal fade-up delay-100">Selección curada por expertos investigadores para el éxito docente.</p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {recomendadas.map((p, idx) => (
+                        {(recomendadas.length ? recomendadas : catalogo.slice(0, 4)).map((p, idx) => (
                             <div key={p.id} className="scroll-reveal fade-up">
                                 <ProductCard product={p} index={idx} isRecomendada={true} />
                             </div>

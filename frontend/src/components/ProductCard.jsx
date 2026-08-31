@@ -1,25 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useInteresContext } from '../shared/estado/useInteresContext';
 
 const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
-    const addToCart = (e) => {
+    const { toggleInteres, estaGuardado } = useInteresContext();
+    const guardarRecurso = (e) => {
         e.preventDefault();
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existing = cart.find(item => item.id === product.id);
-        if (existing) {
-            existing.qty += 1;
-        } else {
-            cart.push({ ...product, qty: 1 });
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        window.dispatchEvent(new Event('storage'));
+        const estabaGuardado = estaGuardado(product.id);
+        toggleInteres(product);
 
         Swal.fire({
             toast: true,
             position: 'bottom-end',
             icon: 'success',
-            title: 'Añadido al carrito',
+            title: estabaGuardado ? 'Recurso retirado de tu lista' : 'Recurso guardado',
             showConfirmButton: false,
             timer: 1500,
             background: '#1f57ff',
@@ -37,7 +32,7 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
 
         return (
             <div
-                className={`relative ${isRowSpan ? 'md:row-span-2' : ''} ${isColSpan ? 'md:col-span-2' : ''} rounded-3xl overflow-hidden shadow-2xl group scroll-reveal scale-in hover-reveal hover-scale transition-all duration-500`}
+                className={`relative ${isRowSpan ? 'md:row-span-2' : ''} ${isColSpan ? 'md:col-span-2' : ''} rounded-3xl overflow-hidden shadow-2xl group hover-reveal hover-scale transition-all duration-500`}
                 style={{ animationDelay: `${delay}ms` }}
             >
                 <Link to={`/product/${product.id}`} className="block h-full transition-transform duration-700 ease-in-out hover:scale-105">
@@ -53,13 +48,13 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
                     <p className="text-sm mb-4 opacity-90 line-clamp-2">{product.short_description || product.description}</p>
                     <div className="flex gap-3">
                         <button className={`${(product.category_slug === 'ia' || product.category_slug === 'vr') ? 'bg-yellow-400 text-black' : 'bg-[#1f57ff] text-white'} px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider shadow-lg transition-transform hover:scale-105`}>
-                            {Math.floor(product.price)} Tokens
+                            Ver recurso
                         </button>
                         <button
-                            onClick={addToCart}
+                            onClick={guardarRecurso}
                             className="bg-white/20 backdrop-blur text-white px-5 py-2 rounded-xl transition duration-300 hover:bg-white/30 border border-white/20"
                         >
-                            <span className="material-symbols-outlined">shopping_cart</span>
+                            <span className="material-symbols-outlined">bookmark_add</span>
                         </button>
                     </div>
                 </div>
@@ -84,13 +79,13 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
                     <h3 className="text-lg font-bold mb-2 text-gray-900">{product.title}</h3>
                     <p className="text-xs text-gray-500 mb-4 line-clamp-2 leading-relaxed">{product.short_description || product.description}</p>
                     <div className="flex justify-between items-center pt-2 border-t border-gray-50">
-                        <span className="text-blue-600 font-black text-xl">{Math.floor(product.price)} <span className="text-[10px]">TKNS</span></span>
+                        <span className="text-blue-600 font-black text-sm">{product.category_name || 'Recurso educativo'}</span>
                         <button
-                            onClick={addToCart}
+                            onClick={guardarRecurso}
                             className="bg-[#1f57ff] hover:bg-[#1745d0] text-white rounded-xl px-4 py-2 flex items-center gap-2 transition-all shadow-md shadow-blue-100"
                         >
-                            <span className="material-symbols-outlined text-sm font-bold">add_shopping_cart</span>
-                            <span className="text-xs font-bold font-sans">AÑADIR</span>
+                            <span className="material-symbols-outlined text-sm font-bold">bookmark_add</span>
+                            <span className="text-xs font-bold font-sans">GUARDAR</span>
                         </button>
                     </div>
                 </div>
@@ -101,7 +96,7 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
     // Estilo normal (para el carrusel "mes")
     return (
         <div
-            className="product-card bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-xl scroll-reveal scale-in group hover-reveal hover-scale transition-all duration-500"
+            className="product-card bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-xl group hover-reveal hover-scale transition-all duration-500"
             style={{ animationDelay: `${delay}ms` }}
         >
             <div className="relative overflow-hidden h-64">
@@ -124,14 +119,14 @@ const ProductCard = ({ product, index, isDestacada, isRecomendada }) => {
                 <p className="text-xs text-gray-400 mb-6 line-clamp-2 leading-relaxed font-medium">{product.short_description || product.description}</p>
                 <div className="flex justify-between items-center">
                     <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Inversión</span>
-                        <span className="text-2xl font-black text-[#1f57ff]">{Math.floor(product.price)} <span className="text-xs font-bold text-blue-400">TOKENS</span></span>
+                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Recurso</span>
+                        <span className="text-sm font-black text-[#1f57ff]">Consulta institucional</span>
                     </div>
                     <button
-                        onClick={addToCart}
+                        onClick={guardarRecurso}
                         className="bg-[#1f57ff] hover:bg-[#1745d0] text-white p-3.5 rounded-2xl flex items-center justify-center transition-all shadow-xl shadow-blue-100 active:scale-95"
                     >
-                        <span className="material-symbols-outlined text-xl font-bold">shopping_cart</span>
+                        <span className="material-symbols-outlined text-xl font-bold">bookmark_add</span>
                     </button>
                 </div>
             </div>

@@ -1,22 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useInteresContext } from '../shared/estado/useInteresContext';
 
 const Navbar = () => {
-    const [cartCount, setCartCount] = useState(0);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
+    const [search, setSearch] = useState('');
+    const [category, setCategory] = useState('todo');
+    const navigate = useNavigate();
+    const { cantidad } = useInteresContext();
 
-    useEffect(() => {
-        const updateState = () => {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            setCartCount(cart.length);
-            const savedUser = JSON.parse(localStorage.getItem('user'));
-            setUser(savedUser);
-        };
-        updateState();
-        window.addEventListener('storage', updateState);
-        return () => window.removeEventListener('storage', updateState);
+    React.useEffect(() => {
+        const savedUser = JSON.parse(localStorage.getItem('user') || 'null');
+        setUser(savedUser);
     }, []);
+
+    const buscar = (event) => {
+        event?.preventDefault();
+        const params = new URLSearchParams();
+        if (search.trim()) params.set('buscar', search.trim());
+        if (category !== 'todo') params.set('categoria', category);
+        navigate(`/?${params.toString()}#recursos`);
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('access_token');
@@ -29,44 +34,44 @@ const Navbar = () => {
 
     return (
         <header className="w-full bg-white border-b shadow-md sticky top-0 z-50">
-            <div className="container mx-auto flex items-center justify-between px-6 py-3 transition-all">
+            <div className="container mx-auto flex items-center justify-between gap-4 px-6 py-2 transition-all">
 
                 {/* Logo UPN institucional */}
                 <Link to="/" className="flex items-center gap-3">
                     <img
                         src="https://www.upn.edu.co/wp-content/uploads/2025/08/Identidad-UPN-25-horizontal-azul-fondo-transparente.png"
                         alt="Logo UPN"
-                        className="w-13 h-20 object-contain transition-transform duration-300 hover:scale-105"
+                        className="w-44 h-16 object-contain transition-transform duration-300 hover:scale-105"
                     />
                 </Link>
 
                 {/* Buscador */}
                 <div className="flex-1 px-6 hidden md:flex">
-                    <div className="flex w-full bg-gray-50 border rounded-full overflow-hidden shadow-inner">
-                        <select id="category-select" className="bg-gray-100 px-4 text-sm outline-none border-r min-w-[160px]">
+                    <form onSubmit={buscar} className="flex w-full bg-gray-50 border rounded-full overflow-hidden shadow-inner">
+                        <select value={category} onChange={(e) => setCategory(e.target.value)} id="category-select" aria-label="Categoría" className="bg-gray-100 px-4 text-sm outline-none border-r min-w-[160px]">
                             <option value="todo">Todas</option>
                             <option value="ia">IA</option>
                             <option value="gamificacion">Gamificación</option>
                             <option value="vr">VR</option>
                             <option value="apps">Apps</option>
                         </select>
-                        <input id="search-input" type="text" placeholder="Buscar herramientas..."
+                        <input value={search} onChange={(e) => setSearch(e.target.value)} id="search-input" type="search" placeholder="Buscar recursos..."
                             className="w-full px-4 py-2 text-sm outline-none bg-gray-50" />
-                        <button id="search-btn"
+                        <button type="submit" id="search-btn"
                             className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition">
                             Buscar
                         </button>
-                    </div>
+                    </form>
                 </div>
 
                 {/* Panel derecho */}
                 <div className="flex items-center gap-6">
-                    {/* Carrito */}
-                    <Link to="/cart" className="relative hover:text-blue-600 transition">
-                        <span className="material-symbols-outlined text-2xl text-gray-700">shopping_cart</span>
+                    {/* Recursos guardados */}
+                    <Link to="/guardados" className="relative hover:text-blue-600 transition" title="Recursos guardados">
+                        <span className="material-symbols-outlined text-2xl text-gray-700">bookmark</span>
                         <span id="cart-count"
                             className="absolute -top-1 -right-2 bg-yellow-400 text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                            {cartCount}
+                            {cantidad}
                         </span>
                     </Link>
 
