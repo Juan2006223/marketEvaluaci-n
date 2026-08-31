@@ -129,7 +129,7 @@ const Login = () => {
                     <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl p-10 lg:p-12 transform hover:scale-[1.01] transition-transform duration-500">
                         <div className="mb-10 text-center">
                             <h1 className="text-4xl font-black text-gray-900 mb-3 tracking-tighter">Iniciar sesión</h1>
-                            <p className="text-gray-400 font-medium">Gestiona tus herramientas educativas.</p>
+                            <p className="text-gray-400 font-medium">Acceso exclusivo para la comunidad UPN.</p>
                         </div>
 
                         <form onSubmit={handleLogin} className="space-y-6">
@@ -176,11 +176,11 @@ const Login = () => {
                                     </div>
                                     <span className="text-gray-500 text-sm font-semibold group-hover:text-gray-700 transition-colors">Recordarme</span>
                                 </label>
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-bold hover:underline transition-all">¿Olvidaste tu contraseña?</a>
+                                <span className="text-slate-400 text-sm font-medium">Acceso institucional</span>
                             </div>
 
                             <button className="w-full bg-[#1f57ff] hover:bg-[#1745d0] text-white font-black py-4 rounded-2xl shadow-xl shadow-blue-200 transform transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 text-lg mt-8">
-                                Canjear Acceso
+                                Ingresar
                                 <span className="material-symbols-outlined font-bold">arrow_forward</span>
                             </button>
                         </form>
@@ -195,8 +195,8 @@ const Login = () => {
                                 <p className="text-xs text-gray-400">El acceso con Google se habilitará al finalizar la configuración institucional.</p>
                             )}
                             <p className="text-gray-400 text-sm font-medium">
-                                ¿Aún no tienes cuenta institucional?
-                                <a href="#" className="text-blue-600 font-bold ml-2 hover:underline">Regístrate</a>
+                                ¿Eres evaluador o administrador?
+                                <span className="text-blue-600 font-bold ml-2">Usa las credenciales asignadas.</span>
                             </p>
                             <div className="h-px bg-gray-100 w-full"></div>
                             <p className="text-[10px] text-gray-300 uppercase font-black tracking-widest px-8 leading-relaxed">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../shared/estado/useAuthContext';
+import { useInteresContext } from '../shared/estado/useInteresContext';
 
 const Navbar = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -9,6 +10,7 @@ const Navbar = () => {
     const [cartCount, setCartCount] = useState(0);
     const navigate = useNavigate();
     const { usuario, cerrarSesion, esAdmin } = useAuthContext();
+    const { cantidad: favoritosCount } = useInteresContext();
 
     React.useEffect(() => {
         const actualizar = () => {
@@ -67,8 +69,11 @@ const Navbar = () => {
 
                 {/* Panel derecho */}
                 <div className="flex items-center gap-6">
-                    <Link to="/guardados" className="hover:text-blue-600 transition" title="Mis favoritos">
+                    <Link to="/guardados" className="relative hover:text-blue-600 transition" title="Mis favoritos">
                         <span className="material-symbols-outlined text-2xl text-gray-700">favorite</span>
+                        <span className="absolute -top-1 -right-2 bg-blue-600 text-white text-xs font-bold min-w-5 h-5 px-1 flex items-center justify-center rounded-full">
+                            {favoritosCount}
+                        </span>
                     </Link>
                     {/* Carrito de cursos */}
                     <Link to="/cart" className="relative hover:text-blue-600 transition" title="Carrito de cursos">
